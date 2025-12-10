@@ -43,7 +43,7 @@ export default function Login() {
         setMessage({ type: "error", text: error.message });
       } else {
         router.refresh(); // Refresh to update server components (header)
-        router.push("/dashboard");
+        router.push("/");
       }
     } catch (err: unknown) {
       const errorMessage =
