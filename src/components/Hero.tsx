@@ -2,76 +2,81 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section className="mt-4">
-      <div className="card">
-        <div className="grid gap-8 hero-grid">
-          <div className="flex flex-col justify-center gap-4">
-            <div className="flex items-center justify-between">
-              <div className="pill-sand">
-                <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
-                  <circle cx="5" cy="5" r="5" fill="var(--color-mint)" />
-                </svg>
-                <span className="small-muted">10 000+ professionnels actifs</span>
-              </div>
-              <div className="text-xs small-muted">5 min / semaine • 100% personnalisé</div>
-            </div>
-
-            <h1 className="title-font text-3xl md:text-4xl leading-tight font-extrabold" style={{ color: "var(--color-forest)" }}>
-              Arrêtez de chercher. <br />
-              Commencez à lire.
-            </h1>
-
-            <p className="body-font small-muted">
-              C'est simple, moderne — « Nous utilisons la tech (le carré) pour faire grandir des idées (la pousse) ».
-              Niche vous livre l'essentiel de votre niche en 5 minutes, personnalisé par IA.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3 mt-2">
-              <Link href="/signup" className="btn-primary inline-flex items-center justify-center">
-                Commencer gratuitement
-              </Link>
-              <Link href="#features" className="btn-mint inline-flex items-center justify-center">
-                Fonctionnalités
-              </Link>
-            </div>
-
-            <div className="mt-4 grid grid-cols-3 gap-3 text-center text-xs">
-              <div className="card small-muted">
-                <div className="font-semibold" style={{ color: "var(--color-forest)" }}>5 min</div>
-                <div className="small-muted">par semaine</div>
-              </div>
-              <div className="card small-muted">
-                <div className="font-semibold" style={{ color: "var(--color-forest)" }}>50+</div>
-                <div className="small-muted">niches</div>
-              </div>
-              <div className="card small-muted">
-                <div className="font-semibold" style={{ color: "var(--color-forest)" }}>100%</div>
-                <div className="small-muted">personnalisé</div>
-              </div>
+    <section className="pt-8 md:pt-16 pb-12">
+      <div className="grid lg:grid-cols-2 gap-12 items-end">
+        {/* Left Content (Matches Mobile Design) */}
+        <div className="flex flex-col gap-8 max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
+          {/* Top Pill */}
+          <div className="flex justify-center lg:justify-start">
+            <div className="pill-white">
+              <div className="w-2 h-2 rounded-full bg-green-400"></div>
+              <span>10 000+ professionnels actifs</span>
             </div>
           </div>
 
-          {/* right preview */}
-          <aside>
-            <div className="rounded-xl overflow-hidden" style={{ padding: 2 }}>
-              <div className="card card-sand" style={{ padding: "1rem" }}>
-                <div className="text-xs small-muted">Aperçu de la newsletter</div>
-                <h3 className="mt-2 font-semibold title-font">L'essentiel de la semaine</h3>
-                <p className="mt-2 small-muted text-sm">Titres optimisés et résumé rapide pour rester informé en 5 minutes.</p>
+          {/* Headline */}
+          <h1 className="title-font text-4xl sm:text-5xl lg:text-[3.5rem] leading-[1.1] font-bold text-forest tracking-tight">
+            Arrêtez de chercher. <br className="hidden sm:block" />
+            Commencez à lire.
+          </h1>
 
-                <ul className="mt-4 small-muted list-disc pl-5 space-y-1 text-sm">
-                  <li>GPT-5 annoncé : les nouveautés</li>
-                  <li>L'IA générative dans l'industrie : 3 cas d'usage</li>
-                  <li>Régulation européenne : ce qui change en 2025</li>
-                </ul>
+          {/* Subheadline */}
+          <p className="body-font text-lg text-gray-600 leading-relaxed max-w-md mx-auto lg:mx-0">
+            L&apos;application de veille intelligente qui vous livre
+            l&apos;essentiel de votre niche en 5 minutes. Personnalisée par IA.
+          </p>
+        </div>
 
-                <div className="mt-4 flex items-center justify-between small-muted">
-                  <div>5 min de lecture</div>
-                  <a className="text-[var(--color-forest)]" href="#">Lire la suite →</a>
-                </div>
+        <div className="flex flex-col gap-6 w-full max-w-md mx-auto lg:ml-auto">
+          {/* CTA */}
+          <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-end gap-4">
+            <Link
+              href="/signup"
+              className="btn-primary w-full sm:w-auto text-lg h-14 px-8 rounded-xl"
+            >
+              Commencer gratuitement
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+              </svg>
+            </Link>
+          </div>
+
+          {/* Stats Cards */}
+          <div className="grid grid-cols-3 gap-4 w-full">
+            <div className="stat-card">
+              <div className="title-font text-2xl font-bold text-forest">
+                5 min
+              </div>
+              <div className="text-xs sm:text-sm text-gray-500 font-medium">
+                par semaine
               </div>
             </div>
-          </aside>
+            <div className="stat-card">
+              <div className="title-font text-2xl font-bold text-forest">
+                50+
+              </div>
+              <div className="text-xs sm:text-sm text-gray-500 font-medium">
+                niches
+              </div>
+            </div>
+            <div className="stat-card">
+              <div className="title-font text-2xl font-bold text-forest">
+                100%
+              </div>
+              <div className="text-xs sm:text-sm text-gray-500 font-medium">
+                personnalisé
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
