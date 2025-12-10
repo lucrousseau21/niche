@@ -3,13 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createClient as createBrowserClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-export default function Signup() {
+export default function Login() {
   const supabase = createBrowserClient();
+  const router = useRouter();
 
-  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,7 +23,7 @@ export default function Signup() {
     e.preventDefault();
     setMessage(null);
 
-    if (!email || !password || !fullName) {
+    if (!email || !password) {
       setMessage({
         type: "error",
         text: "Remplis tous les champs s'il te plaît.",
@@ -33,30 +34,17 @@ export default function Signup() {
     setLoading(true);
 
     try {
-      // 1) Create auth user
-      const { error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
-        options: {
-          data: {
-            full_name: fullName,
-          },
-        },
       });
 
       if (error) {
         setMessage({ type: "error", text: error.message });
-        setLoading(false);
-        return;
+      } else {
+        router.refresh(); // Refresh to update server components (header)
+        router.push("/dashboard");
       }
-
-      setMessage({
-        type: "success",
-        text: "Inscription enregistrée. Vérifie ton e‑mail pour confirmer ton compte, ou connecte-toi si la confirmation est désactivée.",
-      });
-      setFullName("");
-      setEmail("");
-      setPassword("");
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error ? err.message : "Erreur inconnue.";
@@ -76,23 +64,18 @@ export default function Signup() {
             className="title-font text-2xl font-bold"
             style={{ color: "var(--color-forest)" }}
           >
-            Créer un compte
+            Bon retour !
           </h1>
           <p className="small-muted mt-2">
-            Inscription rapide — aucune carte requise pour commencer.
+            Connecte-toi pour accéder à tes newsletters.
           </p>
 
           <form onSubmit={handleSubmit} className="mt-4 grid gap-3">
             <input
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder="Nom complet"
-              aria-label="Nom complet"
-              className="card"
-            />
-            <input
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setEmail(e.target.value)
+              }
               placeholder="Email"
               aria-label="Email"
               type="email"
@@ -100,7 +83,9 @@ export default function Signup() {
             />
             <input
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setPassword(e.target.value)
+              }
               placeholder="Mot de passe"
               aria-label="Mot de passe"
               type="password"
@@ -108,7 +93,7 @@ export default function Signup() {
             />
 
             <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? "Patiente..." : "Créer un compte"}
+              {loading ? "Connexion..." : "Se connecter"}
             </button>
           </form>
 
@@ -123,9 +108,9 @@ export default function Signup() {
           )}
 
           <p className="small-muted mt-3">
-            Déjà inscrit ?{" "}
-            <Link href="/login" className="text-[var(--color-forest)]">
-              Se connecter
+            Pas encore de compte ?{" "}
+            <Link href="/signup" className="text-[var(--color-forest)]">
+              S&apos;inscrire
             </Link>
           </p>
         </div>
