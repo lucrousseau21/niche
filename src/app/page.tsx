@@ -1,64 +1,78 @@
-import Image from "next/image";
+// src/app/page.tsx
+import Header from "@/components/Header";
+import Hero from "@/components/Hero";
+import FeatureCard from "@/components/FeatureCard";
+import NewsletterCard from "@/components/NewsletterCard";
+import Footer from "@/components/Footer";
 
 export default function Home() {
+  const features = [
+    ["IA Personnalisée", "Notre IA adapte le contenu à votre niveau et vos préférences pour une expérience sur-mesure.", "🧠"],
+    ["Dashboard Intuitif", "Suivez votre progression, organisez vos sujets favoris et accédez à votre historique.", "📊"],
+    ["Base de Connaissances", "Recherchez vos newsletters passées avec notre moteur intelligent.", "📚"],
+    ["Gain de Temps", "5 minutes par semaine au lieu de plusieurs heures.", "⏱️"],
+    ["Notifications Smart", "Recevez uniquement les alertes importantes sur vos sujets.", "🔔"],
+  ];
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+    <div className="min-h-screen">
+      <Header />
+      <main className="max-w-4xl mx-auto px-6 pb-24">
+        <Hero />
+
+        <section id="features" className="mt-8">
+          <div className="mb-4">
+            <div className="pill"><svg width="14" height="14" viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="var(--color-mint)"/></svg><span className="small-muted">Fonctionnalités</span></div>
+            <h2 className="title-font text-2xl font-bold mt-3" style={{ color: 'var(--color-forest)' }}>Une veille intelligente et efficace</h2>
+            <p className="small-muted mt-1">Tout ce dont vous avez besoin pour rester à la pointe de votre domaine.</p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            {features.map(([t, d, i]) => (
+              <FeatureCard key={t as string} title={t as string} desc={d as string} icon={i as string} />
+            ))}
+          </div>
+        </section>
+
+        <section id="preview" className="mt-10">
+          <div className="mb-3">
+            <div className="pill"><svg width="14" height="14" viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#EDEFFF"/></svg><span className="small-muted">Aperçu de l'application</span></div>
+            <h3 className="title-font text-2xl font-bold mt-3" style={{ color: 'var(--color-forest)' }}>Découvrez vos newsletters</h3>
+            <p className="small-muted mt-1">Voici à quoi ressemble votre veille hebdomadaire, personnalisée selon vos niches.</p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            <NewsletterCard
+              category="Intelligence Artificielle"
+              date="9 Déc 2025"
+              title="L'essentiel de la semaine"
+              bullets={[
+                "GPT-5 annoncé : les nouveautés qui changent tout",
+                "L'IA générative dans l'industrie : 3 cas d'usage",
+                "Régulation européenne : ce qui change en 2025",
+              ]}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          </div>
+        </section>
+
+        <section id="cta" className="mt-10">
+          <div style={{ background: 'linear-gradient(135deg, var(--color-forest), var(--color-mint))' }} className="rounded-xl p-1">
+            <div className="rounded-lg p-6" style={{ background: 'var(--card-bg)' }}>
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                  <div className="title-font text-xl font-bold" style={{ color: 'var(--color-forest)' }}>Prêt à accélérer votre veille ?</div>
+                  <div className="small-muted mt-1">Essayez gratuitement — aucune carte requise.</div>
+                </div>
+                <div className="flex gap-3">
+                  <a href="/signup" className="btn-primary">Démarrer maintenant</a>
+                  <a href="/pricing" className="btn-mint">En savoir plus</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <Footer />
       </main>
     </div>
   );

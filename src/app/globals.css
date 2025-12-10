@@ -1,26 +1,129 @@
+/* src/app/globals.css
+   Palette, typographie et utilitaires pour Niche (fond blanc) */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&family=Montserrat:wght@600;700&family=Lato:wght@300;400;700&display=swap');
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Palette */
+:root{
+  --color-forest: #134E4A;
+  --color-mint:   #85F6C4;
+  --color-sand:   #FFFAF0;
+  --color-char:   #2D3748;
+  --color-muted:  #6B7280;
+  --white:        #ffffff;
+
+  --bg-page: var(--white);
+  --card-bg: var(--white);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Force white background even in dark mode (per your request) */
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg-page: var(--white);
+    --card-bg: var(--white);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Tailwind layers */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base */
+html,body,#__next{height:100%}
+body{
+  margin:0;
+  background:var(--bg-page);
+  color:var(--color-char);
+  font-family: "Lato", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* Named fonts */
+.logo-font { font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+.title-font { font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+.body-font  { font-family: "Lato", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+
+/* Brand elements */
+.brand-square{
+  width:48px;
+  height:48px;
+  border-radius:10px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background: linear-gradient(180deg, var(--color-sand), #fff);
+  box-shadow: 0 8px 24px rgba(19,78,74,0.06);
+  border: 1px solid rgba(19,78,74,0.04);
+}
+
+/* Buttons */
+.btn-primary{
+  background: var(--color-forest);
+  color: var(--white);
+  border-radius: 12px;
+  padding: 0.65rem 1.05rem;
+  font-weight: 700;
+  box-shadow: 0 10px 30px rgba(19,78,74,0.08);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(19,78,74,0.12); }
+
+.btn-mint{
+  background: var(--color-mint);
+  color: var(--color-forest);
+  border-radius: 12px;
+  padding: 0.65rem 1.05rem;
+  font-weight: 700;
+  border: 1px solid rgba(19,78,74,0.06);
+  transition: transform .12s ease;
+}
+.btn-mint:hover { transform: translateY(-3px); }
+
+/* Cards / pills */
+.pill {
+  display:inline-flex;
+  gap:0.5rem;
+  align-items:center;
+  padding:0.4rem 0.75rem;
+  background:var(--card-bg);
+  border-radius:999px;
+  box-shadow: 0 6px 18px rgba(19,78,74,0.04);
+  font-size:0.9rem;
+}
+.pill-sand {
+  display:inline-flex;
+  gap:0.5rem;
+  align-items:center;
+  padding:0.35rem 0.7rem;
+  border-radius:999px;
+  background: var(--color-sand);
+  box-shadow: 0 6px 18px rgba(19,78,74,0.03);
+}
+
+.card {
+  background:var(--card-bg);
+  border-radius:12px;
+  padding:1rem;
+  box-shadow: 0 8px 24px rgba(19,78,74,0.04);
+  border: 1px solid rgba(19,78,74,0.03);
+}
+
+/* Sand card helper for preview */
+.card-sand {
+  background: var(--color-sand);
+  border-radius: 12px;
+  padding: 0.9rem;
+  border: 1px solid rgba(19,78,74,0.03);
+}
+
+/* Small text */
+.small-muted { color: var(--color-muted); font-size:0.95rem; }
+.kicker { display:inline-block; font-size:0.85rem; color:var(--color-muted); }
+
+/* Layout helpers */
+@media (min-width: 768px) {
+  .hero-grid { grid-template-columns: 1fr 420px; }
 }
