@@ -49,8 +49,21 @@ export async function updateSession(request: NextRequest) {
   // Standard supabase middleware creates the client to refresh the session token if needed.
   // We can add simple protection logic here too.
 
-  if (request.nextUrl.pathname.startsWith("/dashboard") && !user) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  if (request.nextUrl.pathname.startsWith("/dashboard")) {
+    if (!user) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    // Check if user has admin grade in profil table
+    const { data: profile } = await supabase
+      .from("profil")
+      .select("grade")
+      .eq("user_id", user.id) // User specifically mentioned "user_id" in the request
+      .single();
+
+    if (profile?.grade !== "admin") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
   }
 
   return response;
