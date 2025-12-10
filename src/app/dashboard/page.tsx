@@ -2,10 +2,23 @@
 
 import { useState, useEffect } from "react";
 
+interface Article {
+  id_article: number | string;
+  donnees_article: {
+    title: string;
+    link: string;
+    publishedAt: string;
+    sourceName: string;
+  };
+  created_at?: string;
+}
+
 export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<unknown>(null);
-  const [articles, setArticles] = useState<any[]>([]);
+  const [articles, setArticles] = useState<Article[]>([]);
+
+  const [summary, setSummary] = useState<string | null>(null);
 
   const fetchArticles = async () => {
     try {
@@ -24,10 +37,13 @@ export default function Dashboard() {
     fetchArticles();
   }, []);
 
-  const handleRefresh = async () => {
+  const handleRefresh = async (subject?: string) => {
     setLoading(true);
     try {
-      const res = await fetch("/api/ingest", { method: "POST" });
+      const res = await fetch("/api/ingest", {
+        method: "POST",
+        body: subject ? JSON.stringify({ subject }) : undefined,
+      });
       const data = await res.json();
       setResult(data);
       // Refresh articles list after ingestion
@@ -40,18 +56,42 @@ export default function Dashboard() {
     }
   };
 
+  const handleGenerateDigest = async () => {
+    setLoading(true);
+    setSummary(null);
+    try {
+      const res = await fetch("/api/digest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        // Optionally send specific IDs here if we implemented selection
+        // body: JSON.stringify({ articleIds: articles.map(a => a.id_article).slice(0, 10) })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSummary(data.summary);
+      } else {
+        setSummary("Erreur: " + (data.error || data.message));
+      }
+    } catch (error) {
+      console.error(error);
+      setSummary("Erreur fatale lors de la génération du résumé.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-4">Niche Newsletter Dashboard</h1>
 
       <div className="mb-8">
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-4">
           <button
             onClick={async () => {
               setLoading(true);
               try {
                 await fetch("/api/setup", { method: "POST" });
-                alert("Sources Football initialisées !");
+                alert("Sujets initialisés (selon configuration) !");
               } catch (e) {
                 console.error(e);
               } finally {
@@ -61,18 +101,45 @@ export default function Dashboard() {
             disabled={loading}
             className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
           >
-            Initialiser Football (L&apos;Equipe)
+            Initialiser Config (Tout)
           </button>
 
           <button
-            onClick={handleRefresh}
+            onClick={() => handleRefresh()}
             disabled={loading}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
           >
-            {loading ? "Recherche en cours..." : "Lancer la recherche"}
+            {loading ? "Recherche..." : "Rechercher Tout"}
+          </button>
+
+          <button
+            onClick={() => handleRefresh("Football")}
+            disabled={loading}
+            className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-50"
+          >
+            {loading ? "Recherche..." : "Rechercher Football"}
+          </button>
+
+          <button
+            onClick={handleGenerateDigest}
+            disabled={loading}
+            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50 shadow-md"
+          >
+            {loading ? "Génération..." : "Générer Résumé (Derniers 10)"}
           </button>
         </div>
       </div>
+
+      {summary && (
+        <div className="bg-white p-6 rounded shadow-lg mb-8 border-l-4 border-purple-600">
+          <h2 className="text-2xl font-bold mb-4 text-purple-900">
+            Résumé IA (OpenRouter)
+          </h2>
+          <div className="prose max-w-none whitespace-pre-wrap text-gray-800 bg-purple-50 p-4 rounded">
+            {summary}
+          </div>
+        </div>
+      )}
 
       {result !== null && (
         <div className="bg-gray-100 p-4 rounded mb-8">
@@ -93,7 +160,7 @@ export default function Dashboard() {
             <p className="text-gray-500">Aucun article trouvé.</p>
           ) : (
             <ul className="space-y-4">
-              {articles.map((art: any) => (
+              {articles.map((art) => (
                 <li key={art.id_article} className="border-b pb-2">
                   <a
                     href={art.donnees_article.link}

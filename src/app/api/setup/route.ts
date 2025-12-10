@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { RSS_SOURCES } from "@/lib/constants";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -25,39 +26,50 @@ const supabase = createClient(
 export async function POST() {
   console.log("Starting Setup...");
   try {
-    // 1. Ensure Topic 'Football' exists in 'sujet'
-    console.log("Checking Sujet Football...");
-    const { data: existingSujet, error: findError } = await supabase
-      .from("sujet")
-      .select("id_sujet")
-      .ilike("nom", "Football")
-      .maybeSingle();
+    // 1. Get unique topics from configured sources
+    const topics = Array.from(new Set(RSS_SOURCES.map((s) => s.sujetName)));
+    console.log("Configured topics:", topics);
 
-    if (findError) console.error("Error finding sujet:", findError);
+    const results = [];
 
-    if (!existingSujet) {
-      console.log("Creating Sujet 'Football'...");
-      const { error: insertError } = await supabase.from("sujet").insert({
-        nom: "Football",
-        description: "All about Football news",
-      });
+    for (const topic of topics) {
+      console.log(`Checking Sujet '${topic}'...`);
+      const { data: existingSujet, error: findError } = await supabase
+        .from("sujet")
+        .select("id_sujet")
+        .ilike("nom", topic)
+        .maybeSingle();
 
-      if (insertError) {
-        console.error("Sujet creation failed:", insertError);
-        throw insertError;
+      if (findError) {
+        console.error(`Error finding sujet '${topic}':`, findError);
+        results.push({ topic, status: "error", error: findError });
+        continue;
       }
-      console.log("Sujet 'Football' created.");
-    } else {
-      console.log("Sujet 'Football' already exists:", existingSujet.id_sujet);
-    }
 
-    // Since we don't have a 'source' table in the new schema, we are done here.
-    // The sources are hardcoded in src/lib/ingest.ts for now.
+      if (!existingSujet) {
+        console.log(`Creating Sujet '${topic}'...`);
+        const { error: insertError } = await supabase.from("sujet").insert({
+          nom: topic,
+          description: `All about ${topic} news`,
+        });
+
+        if (insertError) {
+          console.error(`Sujet '${topic}' creation failed:`, insertError);
+          results.push({ topic, status: "error", error: insertError });
+        } else {
+          console.log(`Sujet '${topic}' created.`);
+          results.push({ topic, status: "created" });
+        }
+      } else {
+        console.log(`Sujet '${topic}' already exists:`, existingSujet.id_sujet);
+        results.push({ topic, status: "exists", id: existingSujet.id_sujet });
+      }
+    }
 
     return NextResponse.json({
       success: true,
-      message:
-        "Football setup complete (Sujet created, sources configured in code)",
+      message: "Setup complete for all configured topics.",
+      results,
     });
   } catch (error) {
     console.error("Setup API Error:", error);

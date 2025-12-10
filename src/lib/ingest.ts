@@ -1,5 +1,6 @@
 import Parser from "rss-parser";
 import { createClient } from "@supabase/supabase-js";
+import { RSS_SOURCES, RssSource } from "@/lib/constants";
 
 // Initialize Supabase Client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -25,20 +26,7 @@ const supabase = createClient(
 
 const parser = new Parser();
 
-// Temporary hardcoded sources since 'source' table doesn't exist yet
-const HARDCODED_SOURCES = [
-  {
-    name: "L'Equipe",
-    url: "https://dwh.lequipe.fr/api/edito/rss?path=/Football/",
-    sujetName: "Football",
-  },
-];
-
-export async function ingestSource(source: {
-  name: string;
-  url: string;
-  sujetName: string;
-}) {
+export async function ingestSource(source: RssSource) {
   // 1. Get Subject ID
   const { data: sujet, error: sujetError } = await supabase
     .from("sujet")
@@ -58,14 +46,15 @@ export async function ingestSource(source: {
     const feed = await parser.parseURL(source.url);
     let newCount = 0;
 
-    // Limit to first 20 items
+    // Limit to first 20 items per source
     const items = feed.items.slice(0, 20);
 
     for (const item of items) {
       if (!item.link || !item.title || !item.isoDate) continue;
 
       // 2. Check existence using JSONB containment
-      // Note: This might be slow on large datasets without a specific index
+      // Note: This might be slow on large datasets without a specific index.
+      // Ideally check by link AND subject if links can duplicate across subjects (unlikely for specific article links)
       const { data: existing } = await supabase
         .from("article")
         .select("id_article")
@@ -73,15 +62,11 @@ export async function ingestSource(source: {
         .maybeSingle();
 
       if (!existing) {
-        // Generate AI Score and Summary
-        // const { score, summary } = await scoreArticle(
-        //   item.title,
-        //   item.contentSnippet || item.content || ""
-        // );
+        // Default values
         const score = 0;
         const summary = "";
 
-        // 3. Insert Article
+        // 3. Prepare Article Data
         const articleData = {
           title: item.title,
           link: item.link,
@@ -92,9 +77,11 @@ export async function ingestSource(source: {
           status: "new",
         };
 
+        // Insert Article with id_sujet relation
         const { data: newArticle, error: insertError } = await supabase
           .from("article")
           .insert({
+            id_sujet: sujet.id_sujet, // Linking the article to its subject
             donnees_article: articleData,
           })
           .select("id_article")
@@ -105,7 +92,7 @@ export async function ingestSource(source: {
           continue;
         }
 
-        // 4. Insert Recap (Summary)
+        // 4. Insert Recap (Summary) if available (currently empty)
         if (summary && newArticle) {
           const { error: recapError } = await supabase.from("recap").insert({
             id_article: newArticle.id_article,
@@ -119,24 +106,44 @@ export async function ingestSource(source: {
       }
     }
 
-    console.log(`Ingested ${newCount} articles from ${source.name}`);
+    console.log(
+      `Ingested ${newCount} articles from ${source.name} (${source.sujetName})`
+    );
     return newCount;
   } catch (error) {
     console.error(`Error ingesting ${source.name}:`, error);
-    throw error;
+    // Don't throw, just log so other sources continue
+    return 0;
   }
 }
 
-export async function ingestAllSources() {
-  console.log("Starting ingestion with hardcoded sources...");
+/**
+ * Ingest sources, optionally filtered by a specific subject.
+ * @param subjectFilter Optional name of the subject to strict filter by (case insensitive matching on source.sujetName)
+ */
+export async function ingestSources(subjectFilter?: string) {
+  let targets = RSS_SOURCES;
+
+  if (subjectFilter) {
+    console.log(`Filtering ingestion for subject: ${subjectFilter}`);
+    targets = RSS_SOURCES.filter(
+      (s) => s.sujetName.toLowerCase() === subjectFilter.toLowerCase()
+    );
+  } else {
+    console.log("Starting ingestion for ALL sources...");
+  }
 
   const results = [];
-  for (const source of HARDCODED_SOURCES) {
+  for (const source of targets) {
     try {
       const count = await ingestSource(source);
-      results.push({ source: source.name, newArticles: count });
+      results.push({
+        source: source.name,
+        topic: source.sujetName,
+        newArticles: count,
+      });
     } catch (e) {
-      results.push({ source: source.name, error: e });
+      results.push({ source: source.name, topic: source.sujetName, error: e });
     }
   }
   return results;
