@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { createClient as createBrowserClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import Header from "@/components/Header";
 
 export default function Login() {
   const supabase = createBrowserClient();
@@ -54,24 +55,20 @@ export default function Login() {
   }
 
   const handleGoogleLogin = async () => {
-    // Placeholder for Google Login logic
     console.log("Google Login clicked");
-    // Implement actual Supabase Google Auth here if configured
-    /*
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-    })
-    */
   };
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center p-4 relative"
+      className="min-h-screen flex flex-col items-center p-4 relative"
       style={{ backgroundColor: "var(--color-forest)" }}
     >
-      {/* Background Decor if needed, keeping it simple as per image */}
+      {/* HEADER */}
+      <Header />
 
-      <div className="w-full max-w-md space-y-8 relative z-10">
+      {/* MARGE ENTRE LE HEADER ET LE CONTENU */}
+      <div className="mt-24 w-full max-w-md space-y-8 relative z-10">
+
         <div className="text-center space-y-2">
           <h1 className="text-4xl font-bold text-white title-font">
             Bon retour

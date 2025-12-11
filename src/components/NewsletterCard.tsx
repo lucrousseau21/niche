@@ -1,24 +1,30 @@
 import React from "react";
+import Link from "next/link"; 
+
+interface NewsletterCardProps {
+  id?: string;       // L'ID pour le lien (optionnel au cas où)
+  category: string;  // Remplace 'id_sujet' pour l'affichage (ex: "IA", "Crypto")
+  date: string;
+  title: string;
+  bullets: string[];
+}
 
 export default function NewsletterCard({
+  id,
   category,
   date,
   title,
   bullets,
-}: {
-  category: string;
-  date: string;
-  title: string;
-  bullets: string[];
-}) {
+}: NewsletterCardProps) {
   return (
-    <article className="relative bg-white rounded-2xl p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden max-w-lg mx-auto w-full">
+    <article className="relative bg-white rounded-2xl p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden max-w-lg mx-auto w-full border border-gray-100">
       {/* Top Accent Line */}
       <div className="absolute top-0 left-0 right-0 h-2 bg-[#6366F1]"></div>
 
       {/* Header: Category Pill & Date */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 mt-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#FFF9F0] text-forest text-sm font-medium">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#FFF9F0] text-[#004d40] text-sm font-medium border border-[#FFE0B2]">
+          {/* Icone catégorie */}
           <svg
             width="14"
             height="14"
@@ -31,9 +37,12 @@ export default function NewsletterCard({
           >
             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
           </svg>
+          {/* Ici on affiche la catégorie passée en props */}
           {category}
         </div>
+        
         <div className="flex items-center gap-2 text-gray-500 text-sm">
+          {/* Icone calendrier */}
           <svg
             width="16"
             height="16"
@@ -54,16 +63,18 @@ export default function NewsletterCard({
       </div>
 
       {/* Title */}
-      <h3 className="title-font text-2xl font-bold text-forest mb-6">
+      <h3 className="text-2xl font-bold text-[#004d40] mb-6 leading-tight">
         {title}
       </h3>
 
-      {/* Bullets */}
+      {/* Bullets (Le résumé JSON affiché ici) */}
       <ul className="space-y-4 mb-8">
         {bullets.map((bullet, index) => (
           <li key={index} className="flex gap-3 items-start">
             <span className="mt-2 min-w-[6px] h-[6px] rounded-full bg-[#6366F1] flex-shrink-0"></span>
-            <span className="text-gray-600 leading-relaxed">{bullet}</span>
+            <span className="text-gray-600 leading-relaxed text-sm md:text-base">
+              {bullet}
+            </span>
           </li>
         ))}
       </ul>
@@ -86,9 +97,11 @@ export default function NewsletterCard({
           </svg>
           <span>5 min de lecture</span>
         </div>
-        <a
-          href="#"
-          className="flex items-center gap-1 text-forest font-semibold text-sm hover:gap-2 transition-all"
+        
+        {/* Lien vers le détail */}
+        <Link
+          href={id ? `/newsletter/${id}` : "#"} 
+          className="flex items-center gap-1 text-[#004d40] font-semibold text-sm hover:gap-2 transition-all"
         >
           Lire la suite
           <svg
@@ -103,7 +116,7 @@ export default function NewsletterCard({
           >
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
-        </a>
+        </Link>
       </div>
     </article>
   );
