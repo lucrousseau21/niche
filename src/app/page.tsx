@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import Header from "@/components/Header";
 import LandingPage from "@/components/LandingPage";
 import DashboardHome from "@/components/DashboardHome";
+import Footer from "@/components/Footer";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -25,6 +26,7 @@ export default async function Home() {
       ) : (
         <LandingPage />
       )}
+      <Footer />
     </div>
   );
 }

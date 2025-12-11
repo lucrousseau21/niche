@@ -3,7 +3,7 @@
 import Hero from "@/components/Hero";
 import FeatureCard from "@/components/FeatureCard";
 import NewsletterCard from "@/components/NewsletterCard";
-import Footer from "@/components/Footer";
+
 
 export default function LandingPage() {
   // Features data
@@ -486,13 +486,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* Footer (Cream) */}
-      <div className="bg-[#FFFDF7] border-t border-gray-100">
-        <div className="max-w-6xl mx-auto px-6 py-12">
-          <Footer />
-        </div>
-      </div>
     </>
   );
 }

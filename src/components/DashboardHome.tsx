@@ -3,6 +3,7 @@
 import NewsletterCard from "@/components/NewsletterCard";
 import { User } from "@supabase/supabase-js";
 
+
 export default function DashboardHome({
   user,
   subjects,
