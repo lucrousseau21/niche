@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Header() {
   return (
     <header className="max-w-4xl mx-auto px-6 py-6 flex items-center justify-between">
-      <div className="flex items-center gap-4">
+      <Link href="/" className="flex items-center gap-4">
         <div className="brand-square" aria-hidden>
           <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden>
             <rect x="2" y="2" width="20" height="20" rx="4" fill="var(--color-forest)" />
@@ -15,7 +15,7 @@ export default function Header() {
           <div className="logo-font text-lg font-semibold" style={{ color: 'var(--color-forest)' }}>Niche</div>
           <div className="text-xs small-muted">AI-powered content studio</div>
         </div>
-      </div>
+      </Link>
 
       <nav className="hidden md:flex items-center gap-4 text-sm">
         <Link href="#features" className="small-muted">Fonctionnalités</Link>
