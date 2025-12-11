@@ -279,6 +279,7 @@ export default function LandingPage() {
                   "1 newsletter / semaine",
                   "Niches illimitées",
                   "Accès basique",
+                  "Avec publicités",
                 ].map((item, i) => (
                   <li
                     key={i}
@@ -315,7 +316,7 @@ export default function LandingPage() {
 
               <div className="mb-6">
                 <h3 className="title-font text-2xl font-bold text-white mb-2">
-                  Pro
+                  Premium
                 </h3>
                 <p className="text-sm text-green-100/80">
                   Avoir un accès illimité à nos fonctionnalités
@@ -324,7 +325,7 @@ export default function LandingPage() {
 
               <div className="mb-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold text-white tracking-tight">
-                  5€
+                  5.90€
                 </span>
                 <span className="text-green-200/80 font-medium">/mois</span>
               </div>
@@ -336,6 +337,7 @@ export default function LandingPage() {
                   "IA personnalisée",
                   "Accès base de données",
                   "Dashboard complet",
+                  "Podcast (à venir)",
                 ].map((item, i) => (
                   <li
                     key={i}
