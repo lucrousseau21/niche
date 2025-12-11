@@ -2,10 +2,11 @@ import { NextResponse } from "next/server";
 import { ingestAllSources } from "@/lib/ingest";
 
 // This should ideally be protected by a cron secret or admin auth
-export async function POST() {
+export async function POST(req: Request) {
   console.log("Starting ingestion process...");
   try {
-    const results = await ingestAllSources();
+    const { topic } = await req.json().catch(() => ({ topic: undefined }));
+    const results = await ingestAllSources(topic);
     console.log("Ingestion completed:", results);
     return NextResponse.json({ success: true, results });
   } catch (error) {

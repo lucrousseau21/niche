@@ -7,13 +7,22 @@ const supabaseKey =
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const { data: articles, error } = await supabase
+    const { searchParams } = new URL(request.url);
+    const topicId = searchParams.get("topicId");
+
+    let query = supabase
       .from("article")
       .select("id_article, donnees_article, created_at")
       .order("created_at", { ascending: false })
       .limit(20);
+
+    if (topicId) {
+      query = query.eq("id_sujet", topicId);
+    }
+
+    const { data: articles, error } = await query;
 
     if (error) throw error;
 
