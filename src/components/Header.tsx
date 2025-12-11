@@ -158,10 +158,9 @@ export default function Header() {
                   Accueil
                 </Link>
 
-                <Link
-                  href="/dashboard"
-                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/5 rounded-xl transition-colors font-medium"
-                  onClick={() => setIsMenuOpen(false)}
+                <div
+                  title="Bientôt disponible"
+                  className="flex items-center gap-3 px-4 py-3 text-white/50 cursor-not-allowed rounded-xl font-medium"
                 >
                   <svg
                     width="20"
@@ -177,12 +176,11 @@ export default function Header() {
                     <polyline points="17 6 23 6 23 12"></polyline>
                   </svg>
                   Tendances
-                </Link>
+                </div>
 
-                <Link
-                  href="/saved"
-                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/5 rounded-xl transition-colors font-medium"
-                  onClick={() => setIsMenuOpen(false)}
+                <div
+                  title="Bientôt disponible"
+                  className="flex items-center gap-3 px-4 py-3 text-white/50 cursor-not-allowed rounded-xl font-medium"
                 >
                   <svg
                     width="20"
@@ -197,12 +195,11 @@ export default function Header() {
                     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                   </svg>
                   Sauvegardés
-                </Link>
+                </div>
 
-                <Link
-                  href="/analytics"
-                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/5 rounded-xl transition-colors font-medium"
-                  onClick={() => setIsMenuOpen(false)}
+                <div
+                  title="Bientôt disponible"
+                  className="flex items-center gap-3 px-4 py-3 text-white/50 cursor-not-allowed rounded-xl font-medium"
                 >
                   <svg
                     width="20"
@@ -219,12 +216,11 @@ export default function Header() {
                     <line x1="6" y1="20" x2="6" y2="14"></line>
                   </svg>
                   Analytiques
-                </Link>
+                </div>
 
-                <Link
-                  href="/alerts"
-                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/5 rounded-xl transition-colors font-medium"
-                  onClick={() => setIsMenuOpen(false)}
+                <div
+                  title="Bientôt disponible"
+                  className="flex items-center gap-3 px-4 py-3 text-white/50 cursor-not-allowed rounded-xl font-medium"
                 >
                   <svg
                     width="20"
@@ -240,7 +236,7 @@ export default function Header() {
                     <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                   </svg>
                   Alertes
-                </Link>
+                </div>
 
                 <Link
                   href="/settings"
