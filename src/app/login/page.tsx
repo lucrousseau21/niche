@@ -3,19 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createClient as createBrowserClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
-export default function Signup() {
+export default function Login() {
   const supabase = createBrowserClient();
+  const router = useRouter();
 
-  const [lastName, setLastName] = useState("");
-  const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -25,8 +22,7 @@ export default function Signup() {
     e.preventDefault();
     setMessage(null);
 
-    // Basic validation
-    if (!email || !password || !firstName || !lastName || !confirmPassword) {
+    if (!email || !password) {
       setMessage({
         type: "error",
         text: "Remplis tous les champs s'il te plaît.",
@@ -34,43 +30,19 @@ export default function Signup() {
       return;
     }
 
-    if (password !== confirmPassword) {
-      setMessage({
-        type: "error",
-        text: "Les mots de passe ne correspondent pas.",
-      });
-      return;
-    }
-
     setLoading(true);
 
     try {
-      // Create auth user
-      const { error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
-        options: {
-          data: {
-            full_name: `${firstName} ${lastName}`,
-            first_name: firstName,
-            last_name: lastName,
-          },
-        },
       });
 
       if (error) {
         setMessage({ type: "error", text: error.message });
       } else {
-        setMessage({
-          type: "success",
-          text: "Inscription enregistrée. Vérifie ton e‑mail pour confirmer ton compte, ou connecte-toi si la confirmation est désactivée.",
-        });
-        // Optional: clear form
-        setLastName("");
-        setFirstName("");
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
+        router.refresh();
+        router.push("/");
       }
     } catch (err: unknown) {
       const errorMessage =
@@ -82,8 +54,14 @@ export default function Signup() {
   }
 
   const handleGoogleLogin = async () => {
-    // Placeholder
-    console.log("Google Signup clicked");
+    // Placeholder for Google Login logic
+    console.log("Google Login clicked");
+    // Implement actual Supabase Google Auth here if configured
+    /*
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+    })
+    */
   };
 
   return (
@@ -91,42 +69,20 @@ export default function Signup() {
       className="min-h-screen flex flex-col items-center justify-center p-4 relative"
       style={{ backgroundColor: "var(--color-forest)" }}
     >
-      <div className="w-full max-w-md space-y-6 relative z-10 py-8">
+      {/* Background Decor if needed, keeping it simple as per image */}
+
+      <div className="w-full max-w-md space-y-8 relative z-10">
         <div className="text-center space-y-2">
           <h1 className="text-4xl font-bold text-white title-font">
-            Créez votre compte
+            Bon retour
           </h1>
-          <p className="text-white/80 body-font text-lg px-4">
-            Commencez votre veille intelligente dès aujourd&apos;hui
+          <p className="text-white/80 body-font text-lg">
+            Connectez-vous à votre espace personnel
           </p>
         </div>
 
         <div className="bg-white rounded-[2rem] p-8 shadow-2xl">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 ml-1 body-font">
-                Nom
-              </label>
-              <input
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                placeholder=""
-                className="w-full px-5 py-3 rounded-2xl bg-gray-50 border border-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-mint)] focus:bg-white transition-all body-font text-gray-800"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 ml-1 body-font">
-                Prénom
-              </label>
-              <input
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                placeholder=""
-                className="w-full px-5 py-3 rounded-2xl bg-gray-50 border border-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-mint)] focus:bg-white transition-all body-font text-gray-800"
-              />
-            </div>
-
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 ml-1 body-font">
                 Adresse email
@@ -134,7 +90,7 @@ export default function Signup() {
               <input
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder=""
+                placeholder="exemple@email.com"
                 type="email"
                 className="w-full px-5 py-3 rounded-2xl bg-gray-50 border border-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-mint)] focus:bg-white transition-all body-font text-gray-800"
               />
@@ -148,6 +104,7 @@ export default function Signup() {
                 <input
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Votre mot de passe"
                   type={showPassword ? "text" : "password"}
                   className="w-full px-5 py-3 rounded-2xl bg-gray-50 border border-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-mint)] focus:bg-white transition-all body-font text-gray-800"
                 />
@@ -191,62 +148,6 @@ export default function Signup() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 ml-1 body-font">
-                Confirmer le mot de passe
-              </label>
-              <div className="relative">
-                <input
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  type={showConfirmPassword ? "text" : "password"}
-                  className="w-full px-5 py-3 rounded-2xl bg-gray-50 border border-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-mint)] focus:bg-white transition-all body-font text-gray-800"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
-                >
-                  {showConfirmPassword ? (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                      <line x1="1" y1="1" x2="23" y2="23" />
-                    </svg>
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                  )}
-                </button>
-              </div>
-            </div>
-
-            <div className="text-xs text-gray-500 text-center px-2 pt-2">
-              J&apos;accepte les conditions d&apos;utilisation et la politique
-              de confidentialité
-            </div>
-
             {message && (
               <div
                 className={`p-3 rounded-xl text-sm text-center font-medium ${
@@ -264,7 +165,7 @@ export default function Signup() {
               disabled={loading}
               className="w-full py-4 rounded-2xl font-bold text-lg text-[var(--color-forest)] bg-[var(--color-mint)] hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_4px_14px_rgba(133,246,196,0.5)]"
             >
-              {loading ? "Création..." : "Créer mon compte"}
+              {loading ? "Connexion..." : "Se connecter"}
             </button>
           </form>
 
@@ -306,18 +207,19 @@ export default function Signup() {
           </button>
 
           <p className="mt-8 text-center text-sm text-gray-500 body-font">
-            Vous avez déjà un compte ?{" "}
+            Vous n&apos;avez pas de compte ?{" "}
             <Link
-              href="/login"
+              href="/signup"
               className="font-bold text-[var(--color-forest)] hover:underline"
             >
-              Se connecter
+              S&apos;inscrire
             </Link>
           </p>
         </div>
 
         <p className="text-center text-xs text-white/40 max-w-xs mx-auto">
-          En créant un compte, vous rejoignez plus de 10,000 utilisateurs
+          En vous connectant, vous rejoignez notre communauté de plus de 10,000
+          utilisateurs
         </p>
       </div>
     </div>

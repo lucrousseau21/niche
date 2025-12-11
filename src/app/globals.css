@@ -1,129 +1,135 @@
 /* src/app/globals.css
-   Palette, typographie et utilitaires pour Niche (fond blanc) */
+   Palette, typographie et utilitaires pour Niche (fond crème) */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&family=Montserrat:wght@600;700&family=Lato:wght@300;400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 /* Palette */
-:root{
-  --color-forest: #134E4A;
-  --color-mint:   #85F6C4;
-  --color-sand:   #FFFAF0;
-  --color-char:   #2D3748;
-  --color-muted:  #6B7280;
-  --white:        #ffffff;
+:root {
+  --color-forest: #1a3d3b; /* Darker, richer forest green matching the image */
+  --color-mint: #4ade80; /* Vibrante green for accents */
+  --color-sand: #fffdf7; /* Cream background */
+  --color-char: #1a3d3b; /* Use forest for main text too */
+  --color-muted: #4b5563; /* Gray-600 */
+  --white: #ffffff;
 
-  --bg-page: var(--white);
+  --bg-page: var(--color-sand);
   --card-bg: var(--white);
 }
 
-/* Force white background even in dark mode (per your request) */
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg-page: var(--white);
+/* Force cream background even in dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-page: var(--color-sand);
     --card-bg: var(--white);
+    --color-char: #1a3d3b;
   }
 }
 
 /* Tailwind layers */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind layers - handled by import "tailwindcss" above */
 
 /* Base */
-html,body,#__next{height:100%}
-body{
-  margin:0;
-  background:var(--bg-page);
-  color:var(--color-char);
-  font-family: "Lato", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
+html,
+body,
+#__next {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--bg-page);
+  color: var(--color-char);
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
 }
 
 /* Named fonts */
-.logo-font { font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
-.title-font { font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
-.body-font  { font-family: "Lato", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
-
-/* Brand elements */
-.brand-square{
-  width:48px;
-  height:48px;
-  border-radius:10px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  background: linear-gradient(180deg, var(--color-sand), #fff);
-  box-shadow: 0 8px 24px rgba(19,78,74,0.06);
-  border: 1px solid rgba(19,78,74,0.04);
+.logo-font {
+  font-family: "Outfit", system-ui, -apple-system, sans-serif;
+}
+.title-font {
+  font-family: "Outfit", system-ui, -apple-system, sans-serif;
+}
+.body-font {
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
 }
 
 /* Buttons */
-.btn-primary{
+.btn-primary {
   background: var(--color-forest);
   color: var(--white);
-  border-radius: 12px;
-  padding: 0.65rem 1.05rem;
-  font-weight: 700;
-  box-shadow: 0 10px 30px rgba(19,78,74,0.08);
-  transition: transform .12s ease, box-shadow .12s ease;
+  border-radius: 8px;
+  padding: 0.8rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
-.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(19,78,74,0.12); }
+.btn-primary:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
 
-.btn-mint{
-  background: var(--color-mint);
+.btn-mint {
+  background: white;
   color: var(--color-forest);
-  border-radius: 12px;
-  padding: 0.65rem 1.05rem;
-  font-weight: 700;
-  border: 1px solid rgba(19,78,74,0.06);
-  transition: transform .12s ease;
+  border-radius: 8px;
+  padding: 0.8rem 1.5rem;
+  font-weight: 600;
+  border: 1px solid rgba(26, 61, 59, 0.1);
+  transition: all 0.2s ease;
 }
-.btn-mint:hover { transform: translateY(-3px); }
+.btn-mint:hover {
+  background: #f8fafc;
+  transform: translateY(-1px);
+}
 
 /* Cards / pills */
-.pill {
-  display:inline-flex;
-  gap:0.5rem;
-  align-items:center;
-  padding:0.4rem 0.75rem;
-  background:var(--card-bg);
-  border-radius:999px;
-  box-shadow: 0 6px 18px rgba(19,78,74,0.04);
-  font-size:0.9rem;
-}
-.pill-sand {
-  display:inline-flex;
-  gap:0.5rem;
-  align-items:center;
-  padding:0.35rem 0.7rem;
-  border-radius:999px;
-  background: var(--color-sand);
-  box-shadow: 0 6px 18px rgba(19,78,74,0.03);
+.pill-white {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: var(--white);
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(26, 61, 59, 0.05);
+  border: 1px solid rgba(26, 61, 59, 0.05);
+  font-size: 0.9rem;
+  color: var(--color-forest);
+  font-weight: 500;
 }
 
-.card {
-  background:var(--card-bg);
-  border-radius:12px;
-  padding:1rem;
-  box-shadow: 0 8px 24px rgba(19,78,74,0.04);
-  border: 1px solid rgba(19,78,74,0.03);
+.stat-card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 1.25rem 1rem;
+  box-shadow: 0 4px 20px rgba(26, 61, 59, 0.03);
+  border: 1px solid rgba(26, 61, 59, 0.03);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
 }
-
-/* Sand card helper for preview */
-.card-sand {
-  background: var(--color-sand);
-  border-radius: 12px;
-  padding: 0.9rem;
-  border: 1px solid rgba(19,78,74,0.03);
-}
-
-/* Small text */
-.small-muted { color: var(--color-muted); font-size:0.95rem; }
-.kicker { display:inline-block; font-size:0.85rem; color:var(--color-muted); }
 
 /* Layout helpers */
-@media (min-width: 768px) {
-  .hero-grid { grid-template-columns: 1fr 420px; }
+@media (min-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: 1.2fr 1fr;
+    gap: 4rem;
+  }
+}
+
+/* Utilities */
+.text-forest {
+  color: var(--color-forest);
+}
+.text-mint {
+  color: var(--color-mint);
 }

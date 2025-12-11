@@ -96,6 +96,7 @@ export async function ingestSource(source: {
           .from("article")
           .insert({
             donnees_article: articleData,
+            id_sujet: sujet.id_sujet,
           })
           .select("id_article")
           .single();
@@ -127,11 +128,20 @@ export async function ingestSource(source: {
   }
 }
 
-export async function ingestAllSources() {
-  console.log("Starting ingestion with hardcoded sources...");
+export async function ingestAllSources(topicName?: string) {
+  console.log(
+    "Starting ingestion with hardcoded sources...",
+    topicName ? `for topic: ${topicName}` : "all topics"
+  );
 
   const results = [];
-  for (const source of HARDCODED_SOURCES) {
+  const sourcesToIngest = topicName
+    ? HARDCODED_SOURCES.filter(
+        (s) => s.sujetName.toLowerCase() === topicName.toLowerCase()
+      )
+    : HARDCODED_SOURCES;
+
+  for (const source of sourcesToIngest) {
     try {
       const count = await ingestSource(source);
       results.push({ source: source.name, newArticles: count });
