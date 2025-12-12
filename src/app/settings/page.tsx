@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import LogoutButton from "@/components/LogoutButton";
 import Header from "@/components/Header";
+import SettingsNicheSelector from "@/components/SettingsNicheSelector";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -57,6 +58,9 @@ export default async function SettingsPage() {
                 </div>
               </div>
             </div>
+
+            {/* Niches Section */}
+            <SettingsNicheSelector />
 
             {/* Logout Section */}
             <div className="pt-8 border-t border-gray-100">

@@ -4,8 +4,20 @@ import Hero from "@/components/Hero";
 import FeatureCard from "@/components/FeatureCard";
 import NewsletterCard from "@/components/NewsletterCard";
 
-
 export default function LandingPage() {
+  
+  // 1. Données statiques pour l'exemple de la Landing Page
+  const demoNewsletter = {
+    category: "Intelligence Artificielle",
+    date: "14 Octobre 2024",
+    title: "L'IA générative transforme le secteur médical",
+    bullets: [
+      "Google DeepMind dévoile AlphaFold 3 pour la modélisation moléculaire.",
+      "L'UE vote une nouvelle régulation sur l'usage de l'IA dans la santé.",
+      "Nvidia lance une puce dédiée au calcul génomique ultra-rapide."
+    ]
+  };
+
   // Features data
   const features = [
     {
@@ -212,15 +224,13 @@ export default function LandingPage() {
             </div>
 
             <div className="flex justify-center">
-              <NewsletterCard
-                category="Intelligence Artificielle"
-                date="9 Déc 2025"
-                title="L'essentiel de la semaine"
-                bullets={[
-                  "GPT-5 annoncé : les nouveautés qui changent tout",
-                  "L'IA générative dans l'industrie : 3 cas d'usage",
-                  "Régulation européenne : ce qui change en 2025",
-                ]}
+              {/* 2. Affichage de la Newsletter avec les données statiques */}
+              <NewsletterCard 
+                category={demoNewsletter.category}
+                date={demoNewsletter.date}
+                title={demoNewsletter.title}
+                bullets={demoNewsletter.bullets}
+                // Pas besoin d'ID ici car c'est juste visuel
               />
             </div>
           </section>

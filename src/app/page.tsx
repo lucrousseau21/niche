@@ -12,9 +12,24 @@ export default async function Home() {
 
   let subjects: { nom: string; description: string }[] = [];
   if (user) {
-    const { data } = await supabase.from("sujet").select("nom, description");
-    if (data) {
-      subjects = data;
+    // 1. Get IDs from profile
+    const { data: profileData } = await supabase
+      .from("profil")
+      .select("id_sujet")
+      .eq("user_id", user.id);
+
+    const ids = profileData?.map((p) => p.id_sujet) || [];
+
+    if (ids.length > 0) {
+      // 2. Get details from subjects
+      const { data: subjectsData } = await supabase
+        .from("sujet")
+        .select("nom, description")
+        .in("id_sujet", ids);
+
+      if (subjectsData) {
+        subjects = subjectsData;
+      }
     }
   }
 

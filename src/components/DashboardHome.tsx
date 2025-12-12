@@ -1,8 +1,22 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import NewsletterCard from "@/components/NewsletterCard";
 import { User } from "@supabase/supabase-js";
+import { createClient as createBrowserClient } from "@/lib/supabase/client";
 
+// Initialisation du client Supabase
+const supabase = createBrowserClient();
+
+// Type pour les données de la table 'recap'
+type RecapItem = {
+  id_recap: number;
+  created_at: string;
+  titre: string;
+  categorie: string;
+  resume: any; // JSON
+  contenu: string;
+};
 
 export default function DashboardHome({
   user,
@@ -13,8 +27,97 @@ export default function DashboardHome({
 }) {
   const impactFilters = ["Fort impact", "Impact moyen", "Faible impact"];
 
-  // Use user metadata name or fallback to Alex as per design request
+  // États pour les newsletters
+  const [recaps, setRecaps] = useState<RecapItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Use user metadata name or fallback to Alex
   const userName = user.user_metadata?.full_name?.split(" ")[0] || "Alex";
+
+  // --- 1. Récupération des données Supabase ---
+  useEffect(() => {
+    const fetchRecaps = async () => {
+      setLoading(true);
+
+      // Extract subject names for filtering
+      const subjectNames = subjects.map((s) => s.nom);
+
+      if (subjectNames.length === 0) {
+        setRecaps([]);
+        setLoading(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("recap")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error(
+          "Erreur chargement recaps details:",
+          JSON.stringify(error, null, 2)
+        );
+      } else {
+        // Normalize for comparison
+        const normalizedSubjects = subjectNames.map((s) =>
+          s.trim().toLowerCase()
+        );
+
+        const filtered = (data || []).filter((r: any) => {
+          // Check 'titre' as primary match, and 'categorie' as fallback.
+          const title = r.titre ? r.titre.trim().toLowerCase() : "";
+          const cat = r.categorie ? r.categorie.trim().toLowerCase() : "";
+
+          return (
+            normalizedSubjects.includes(title) ||
+            normalizedSubjects.includes(cat)
+          );
+        });
+
+        setRecaps(filtered);
+      }
+      setLoading(false);
+    };
+
+    fetchRecaps();
+  }, []);
+
+  // --- 2. Fonction pour nettoyer le JSON du résumé ---
+  const parseResume = (resumeData: any): string[] => {
+    try {
+      let parsed = resumeData;
+      // If it's a string, try to parse it
+      if (typeof resumeData === "string") {
+        parsed = JSON.parse(resumeData);
+      }
+
+      // Case 1: Array
+      if (Array.isArray(parsed)) return parsed;
+
+      // Case 2: Object with keys like titre_1, titre_2, etc.
+      if (typeof parsed === "object" && parsed !== null) {
+        // Extract values strictly from keys matching the pattern or just take all string values?
+        // User specific example showed "titre_1", "titre_2", etc.
+        // Let's take all values values that are strings, or specific keys if we want to be strict.
+        // Taking all values gives flexibility if keys change slightly (e.g. point_1).
+        const values = Object.values(parsed).filter(
+          (val) => typeof val === "string"
+        ) as string[];
+        if (values.length > 0) return values;
+      }
+
+      // Fallback if structure is unknown or empty
+      return ["Résumé non disponible"];
+    } catch (e) {
+      console.error("Error parsing resume:", e);
+      // If it was a simple string that failed parsing, return it as single point
+      if (typeof resumeData === "string" && resumeData.trim().length > 0)
+        return [resumeData];
+
+      return ["Résumé non disponible"];
+    }
+  };
 
   return (
     <div className="bg-[#FFFDF7] min-h-screen pb-24">
@@ -49,7 +152,9 @@ export default function DashboardHome({
                 Vous êtes à jour
               </div>
               <div className="text-gray-500 text-sm">
-                1/6 veilles consultées
+                {/* Exemple de stat dynamique simple */}
+                {recaps.length > 0 ? `1/${recaps.length}` : "0/0"} veilles
+                consultées
               </div>
             </div>
           </div>
@@ -59,7 +164,7 @@ export default function DashboardHome({
           </div>
         </div>
 
-        {/* Stats Overview */}
+        {/* Stats Overview (Statique pour l'instant) */}
         <div className="bg-white rounded-3xl p-6 shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100 mb-10">
           <h3 className="text-[#1A3D3B] text-lg font-semibold mb-6">
             Vue d&apos;ensemble
@@ -68,19 +173,6 @@ export default function DashboardHome({
             {/* Stat 1 */}
             <div className="flex flex-col items-center">
               <span className="bg-[#4ADE80] text-[#1A3D3B] text-[10px] font-bold px-2 py-0.5 rounded-full mb-2 flex items-center gap-1">
-                <svg
-                  width="10"
-                  height="10"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
                 +12%
               </span>
               <div className="text-3xl font-bold text-[#1A3D3B] mb-1">24</div>
@@ -93,18 +185,6 @@ export default function DashboardHome({
             {/* Stat 2 */}
             <div className="flex flex-col items-center border-l border-r border-gray-100 px-2">
               <span className="bg-[#4ADE80] text-[#1A3D3B] text-[10px] font-bold px-2 py-0.5 rounded-full mb-2 flex items-center gap-1">
-                <svg
-                  width="10"
-                  height="10"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                </svg>
                 +8%
               </span>
               <div className="text-3xl font-bold text-[#1A3D3B] mb-1">18</div>
@@ -117,19 +197,6 @@ export default function DashboardHome({
             {/* Stat 3 */}
             <div className="flex flex-col items-center">
               <span className="bg-[#4ADE80] text-[#1A3D3B] text-[10px] font-bold px-2 py-0.5 rounded-full mb-2 flex items-center gap-1">
-                <svg
-                  width="10"
-                  height="10"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                  <polyline points="17 6 23 6 23 12"></polyline>
-                </svg>
                 +15%
               </span>
               <div className="text-3xl font-bold text-[#1A3D3B] mb-1">4.2h</div>
@@ -213,21 +280,6 @@ export default function DashboardHome({
         {/* Dashboard Link - Center */}
         <div className="flex justify-center mb-10">
           <span className="bg-white border border-gray-200 text-gray-500 px-6 py-3 rounded-full text-sm font-semibold flex items-center gap-2 shadow-sm">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <rect x="3" y="3" width="7" height="7"></rect>
-              <rect x="14" y="3" width="7" height="7"></rect>
-              <rect x="14" y="14" width="7" height="7"></rect>
-              <rect x="3" y="14" width="7" height="7"></rect>
-            </svg>
             Tableau de bord
           </span>
         </div>
@@ -236,23 +288,32 @@ export default function DashboardHome({
         <div className="flex items-end justify-between mb-4 px-1">
           <h2 className="text-xl font-bold text-[#1A3D3B]">Veilles du jour</h2>
           <span className="text-xs font-medium text-gray-400 mb-1">
-            6 résultats
+            {recaps.length} résultat{recaps.length > 1 ? "s" : ""}
           </span>
         </div>
 
-        {/* Feed List */}
+        {/* Feed List (Newsletters) */}
         <div className="space-y-4">
-          {/* Card 1 */}
-          <NewsletterCard
-            category="Intelligence Artificielle"
-            date="9 Déc 2025"
-            title="L'essentiel de la semaine"
-            bullets={[
-              "GPT-5 annoncé : les nouveautés qui changent tout",
-              "L'IA générative dans l'industrie : 3 cas d'usage",
-              "Régulation européenne : ce qui change en 2025",
-            ]}
-          />
+          {loading ? (
+            <div className="text-center text-gray-400 py-10">
+              Chargement de vos veilles...
+            </div>
+          ) : recaps.length > 0 ? (
+            recaps.map((recap) => (
+              <NewsletterCard
+                key={recap.id_recap}
+                id={String(recap.id_recap)}
+                category={recap.categorie || "Actualité"}
+                title={recap.titre || "Sans titre"}
+                date={new Date(recap.created_at).toLocaleDateString("fr-FR")}
+                bullets={parseResume(recap.resume)}
+              />
+            ))
+          ) : (
+            <div className="text-center text-gray-400 py-10">
+              Aucune newsletter pour le moment.
+            </div>
+          )}
         </div>
       </div>
     </div>
