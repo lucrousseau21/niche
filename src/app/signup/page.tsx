@@ -4,9 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
+import { createClient } from "@/lib/supabase/client";
 
 export default function Signup() {
   const router = useRouter();
+  const supabase = createClient();
 
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -22,17 +24,23 @@ export default function Signup() {
     text: string;
   } | null>(null);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setMessage(null);
 
     if (!email || !password || !firstName || !lastName || !confirmPassword) {
-      setMessage({ type: "error", text: "Remplis tous les champs s'il te plaît." });
+      setMessage({
+        type: "error",
+        text: "Remplis tous les champs s'il te plaît.",
+      });
       return;
     }
 
     if (password !== confirmPassword) {
-      setMessage({ type: "error", text: "Les mots de passe ne correspondent pas." });
+      setMessage({
+        type: "error",
+        text: "Les mots de passe ne correspondent pas.",
+      });
       return;
     }
 
@@ -44,11 +52,62 @@ export default function Signup() {
       return;
     }
 
-    router.push("/formulaire");
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: `${firstName} ${lastName}`,
+            first_name: firstName,
+            last_name: lastName,
+          },
+        },
+      });
+
+      if (error) {
+        setMessage({ type: "error", text: error.message });
+        return;
+      }
+
+      if (data.session) {
+        router.push("/formulaire");
+        return;
+      }
+
+      // Fallback: If no session but user exists, try explicit sign in
+      // This handles cases where auto-login might be skipped or behaves differently
+      if (data.user) {
+        const { data: signInData, error: signInError } =
+          await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+
+        if (signInData.session) {
+          router.push("/formulaire");
+          return;
+        }
+      }
+
+      // If still no session, likely email verification is required
+      setMessage({
+        type: "success",
+        text: "Compte créé ! Si vous avez activé la confirmation par email, veuillez vérifier votre boîte de réception.",
+      });
+    } catch (err: any) {
+      setMessage({
+        type: "error",
+        text: "Une erreur est survenue lors de l'inscription.",
+      });
+    }
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "var(--color-forest)" }}>
+    <div
+      className="min-h-screen flex flex-col"
+      style={{ backgroundColor: "var(--color-forest)" }}
+    >
       {/* HEADER */}
       <Header />
 
@@ -56,7 +115,9 @@ export default function Signup() {
       <div className="mt-20 flex flex-col items-center justify-center flex-1 p-4 w-full">
         <div className="w-full max-w-md space-y-6">
           <div className="text-center space-y-2">
-            <h1 className="text-4xl font-bold text-white title-font">Créez votre compte</h1>
+            <h1 className="text-4xl font-bold text-white title-font">
+              Créez votre compte
+            </h1>
             <p className="text-white/80 body-font text-lg px-4">
               Commencez votre veille intelligente dès aujourd&apos;hui
             </p>
@@ -66,7 +127,9 @@ export default function Signup() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Nom */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 ml-1 body-font">Nom</label>
+                <label className="text-sm font-medium text-gray-700 ml-1 body-font">
+                  Nom
+                </label>
                 <input
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
@@ -78,7 +141,9 @@ export default function Signup() {
 
               {/* Prénom */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 ml-1 body-font">Prénom</label>
+                <label className="text-sm font-medium text-gray-700 ml-1 body-font">
+                  Prénom
+                </label>
                 <input
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
@@ -90,7 +155,9 @@ export default function Signup() {
 
               {/* Email */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 ml-1 body-font">Adresse email</label>
+                <label className="text-sm font-medium text-gray-700 ml-1 body-font">
+                  Adresse email
+                </label>
                 <input
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -103,7 +170,9 @@ export default function Signup() {
 
               {/* Mot de passe */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 ml-1 body-font">Mot de passe</label>
+                <label className="text-sm font-medium text-gray-700 ml-1 body-font">
+                  Mot de passe
+                </label>
                 <div className="relative">
                   <input
                     value={password}
@@ -119,12 +188,26 @@ export default function Signup() {
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
                     {showPassword ? (
-                      <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <svg
+                        width="20"
+                        height="20"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                      >
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                         <circle cx="12" cy="12" r="3" />
                       </svg>
                     ) : (
-                      <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <svg
+                        width="20"
+                        height="20"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                      >
                         <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
                         <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
                         <line x1="1" y1="1" x2="23" y2="23" />
@@ -136,7 +219,9 @@ export default function Signup() {
 
               {/* Confirmation mot de passe */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 ml-1 body-font">Confirmer le mot de passe</label>
+                <label className="text-sm font-medium text-gray-700 ml-1 body-font">
+                  Confirmer le mot de passe
+                </label>
                 <div className="relative">
                   <input
                     value={confirmPassword}
@@ -152,12 +237,26 @@ export default function Signup() {
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
                     {showConfirmPassword ? (
-                      <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <svg
+                        width="20"
+                        height="20"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                      >
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                         <circle cx="12" cy="12" r="3" />
                       </svg>
                     ) : (
-                      <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <svg
+                        width="20"
+                        height="20"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                      >
                         <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
                         <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
                         <line x1="1" y1="1" x2="23" y2="23" />
@@ -177,9 +276,12 @@ export default function Signup() {
                   className="w-4 h-4 accent-[var(--color-mint)]"
                 />
                 <label htmlFor="terms" className="text-gray-700">
-                  J'accepte les{" "}
-                  <Link href="/conditions" className="text-[var(--color-forest)] underline">
-                    conditions d'utilisation
+                  J&apos;accepte les{" "}
+                  <Link
+                    href="/conditions"
+                    className="text-[var(--color-forest)] underline"
+                  >
+                    conditions d&apos;utilisation
                   </Link>{" "}
                   et la politique de confidentialité
                 </label>
