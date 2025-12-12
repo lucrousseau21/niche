@@ -5,7 +5,6 @@ import FeatureCard from "@/components/FeatureCard";
 import NewsletterCard from "@/components/NewsletterCard";
 
 export default function LandingPage() {
-  
   // 1. Données statiques pour l'exemple de la Landing Page
   const demoNewsletter = {
     category: "Intelligence Artificielle",
@@ -14,8 +13,8 @@ export default function LandingPage() {
     bullets: [
       "Google DeepMind dévoile AlphaFold 3 pour la modélisation moléculaire.",
       "L'UE vote une nouvelle régulation sur l'usage de l'IA dans la santé.",
-      "Nvidia lance une puce dédiée au calcul génomique ultra-rapide."
-    ]
+      "Nvidia lance une puce dédiée au calcul génomique ultra-rapide.",
+    ],
   };
 
   // Features data
@@ -225,7 +224,7 @@ export default function LandingPage() {
 
             <div className="flex justify-center">
               {/* 2. Affichage de la Newsletter avec les données statiques */}
-              <NewsletterCard 
+              <NewsletterCard
                 category={demoNewsletter.category}
                 date={demoNewsletter.date}
                 title={demoNewsletter.title}
@@ -265,7 +264,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto items-start">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-start">
             {/* Free Plan */}
             <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-xl shadow-gray-200/40 hover:border-gray-200 transition-all text-left relative h-full flex flex-col">
               <div className="mb-6">
@@ -288,7 +287,7 @@ export default function LandingPage() {
                 {[
                   "1 newsletter / semaine",
                   "Niches illimitées",
-                  "Accès basique",
+                  "Niche au choix",
                   "Avec publicités",
                 ].map((item, i) => (
                   <li
@@ -375,6 +374,61 @@ export default function LandingPage() {
                 Démarrer maintenant
               </button>
             </div>
+
+            {/* Enterprise Plan */}
+            <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-xl shadow-gray-200/40 hover:border-gray-200 transition-all text-left relative h-full flex flex-col">
+              <div className="mb-6">
+                <h3 className="title-font text-2xl font-bold text-[#1A3D3B] mb-2">
+                  Licence entreprise
+                </h3>
+                <p className="text-sm text-gray-500">
+                  Avoir un accès illimité à nos fonctionnalités pour vos
+                  salariés
+                </p>
+              </div>
+
+              <div className="mb-6 flex items-baseline gap-1">
+                <span className="text-4xl font-bold text-[#1A3D3B] tracking-tight">
+                  Sur devis
+                </span>
+                <span className="text-gray-400 font-medium">/an</span>
+              </div>
+
+              <ul className="space-y-4 mb-8 flex-1">
+                {[
+                  "Une newsletters / jour",
+                  "Niches illimitées",
+                  "IA et fonctionnalités personnalisées",
+                  "Accès base de données",
+                  "Dashboard complet",
+                  "Podcast (à venir)",
+                ].map((item, i) => (
+                  <li
+                    key={i}
+                    className="flex gap-3 text-sm text-gray-600 font-medium"
+                  >
+                    <svg
+                      className="w-5 h-5 text-green-400 shrink-0"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+
+              <button className="w-full py-3.5 px-6 rounded-xl bg-[#4ADE80] hover:bg-[#4ADE80]/90 text-[#1A3D3B] font-bold transition-colors shadow-lg shadow-green-500/20">
+                Contacter Niche
+              </button>
+            </div>
           </div>
 
           <div className="mt-12 text-sm text-gray-500 space-y-1">
@@ -436,7 +490,7 @@ export default function LandingPage() {
       {/* CTA Section (Full Width Dark Green) */}
       <section id="cta" className="bg-[#1A3D3B] py-24 relative overflow-hidden">
         {/* Radial gradient effect */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent pointer-events-none"></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_top,var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent pointer-events-none"></div>
 
         <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
           <h2 className="title-font text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
