@@ -2,8 +2,8 @@ import React from "react";
 import Link from "next/link"; 
 
 interface NewsletterCardProps {
-  id?: string;       // L'ID pour le lien (optionnel au cas où)
-  category: string;  // Remplace 'id_sujet' pour l'affichage (ex: "IA", "Crypto")
+  id?: string;  
+  category: string; 
   date: string;
   title: string;
   bullets: string[];

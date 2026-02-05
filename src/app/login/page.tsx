@@ -55,8 +55,26 @@ export default function Login() {
   }
 
   const handleGoogleLogin = async () => {
-    console.log("Google Login clicked");
-  };
+  try {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        // Cette URL doit être configurée dans ton dashboard Supabase
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) throw error;
+  } catch (err: any) {
+    setMessage({
+      type: "error",
+      text: "Erreur lors de la connexion avec Google : " + err.message,
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div
