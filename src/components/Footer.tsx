@@ -5,13 +5,12 @@ import { Mail, Instagram, Facebook } from "lucide-react";
 export default function Footer() {
   return (
     <footer className="bg-[#FFFAF0] mt-16 px-6 pt-10 pb-6 text-[#2D3748] text-sm">
-      
       {/* --- TOP : Logo + Social --- */}
       <div>
         <img
-          src="/logo-niche.svg"
-          alt="Niche."
-          className="h-10 mb-2"
+          src="/NICHE_LOGO.png"
+          alt="Niche Logo"
+          className="h-10 w-auto mb-2 object-contain"
         />
 
         <p className="text-sm opacity-70 mb-4">L’expertise. Point.</p>
@@ -35,11 +34,10 @@ export default function Footer() {
 
       {/* --- GRID SECTION MOBILE → DESKTOP --- */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        
         {/* Col 1 : Produit */}
         <div>
           <h4 className="text-[#134E4A] font-semibold mb-2">Produit</h4>
-          
+
           <h5 className="font-semibold mt-4 mb-1">Fonctionnalités</h5>
 
           <h5 className="font-semibold mt-4 mb-1">Tarifs</h5>
@@ -79,7 +77,6 @@ export default function Footer() {
             <Mail size={16} /> CGV
           </Link>
         </div>
-
       </div>
 
       {/* --- SEPARATOR --- */}
@@ -96,7 +93,6 @@ export default function Footer() {
           contact@niche.fr
         </a>
       </div>
-
     </footer>
   );
 }
