@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import React from "react";
 import Link from "next/link";
 import Header from "@/components/Header";
+
+export const metadata: Metadata = {
+  title: "Politique de confidentialité | Niche.",
+  description:
+    "Politique de confidentialité Niche : protection des données, usages, cookies et droits RGPD.",
+};
 
 export default function PolitiqueConfidentialite() {
   return (

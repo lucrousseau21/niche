@@ -42,11 +42,12 @@ export default function Header() {
     <header className="fixed top-0 w-full z-50 bg-white shadow-sm border-b border-gray-50/50">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
-        <Link
-          href="/"
-          className="font-bold text-3xl tracking-tighter text-[#1A3D3B]"
-        >
-          Niche.
+        <Link href="/" className="inline-flex items-center">
+          <img
+            src="/images/Logo 1.svg"
+            alt="Niche"
+            className="h-10 w-auto"
+          />
         </Link>
 
         {/* Mobile Hamburger */}

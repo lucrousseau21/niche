@@ -16,20 +16,8 @@ export default function Footer() {
 
         <p className="text-sm opacity-70 mb-4">L’expertise. Point.</p>
 
-        <div className="flex gap-4 mb-8">
-          <Link
-            href="#"
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow border border-[#E5E7EB]"
-          >
-            <Instagram size={18} />
-          </Link>
-
-          <Link
-            href="#"
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow border border-[#E5E7EB]"
-          >
-            <Facebook size={18} />
-          </Link>
+        <div className="text-sm text-[#4B5563] mb-8">
+          Contactez-nous : <a href="mailto:contact@niche.fr" className="underline">contact@niche.fr</a>
         </div>
       </div>
 
@@ -39,37 +27,40 @@ export default function Footer() {
         {/* Col 1 : Produit */}
         <div>
           <h4 className="text-[#134E4A] font-semibold mb-2">Produit</h4>
-          
-          <h5 className="font-semibold mt-4 mb-1">Fonctionnalités</h5>
 
-          <h5 className="font-semibold mt-4 mb-1">Tarifs</h5>
-          <Link href="#" className="flex items-center gap-2 mt-1">
-            <Mail size={16} /> Niches disponibles
+          <Link href="/#features" className="flex items-center gap-2 mt-1">
+            <Mail size={16} /> Fonctionnalités
           </Link>
+          <Link href="/pricing" className="flex items-center gap-2 mt-1">
+            <Mail size={16} /> Tarifs
+          </Link>
+          <p className="flex items-center gap-2 mt-1 text-[#6B7280]">
+            <Mail size={16} /> Niches disponibles
+          </p>
         </div>
 
         {/* Col 2 : Entreprise */}
         <div>
           <h4 className="text-[#134E4A] font-semibold mb-2">Entreprise</h4>
 
-          <Link href="#" className="flex items-center gap-2 mt-1">
+          <Link href="/about" className="flex items-center gap-2 mt-1">
             <Mail size={16} /> À propos
           </Link>
-          <Link href="#" className="flex items-center gap-2 mt-1">
-            <Mail size={16} /> Blog
-          </Link>
-          <Link href="#" className="flex items-center gap-2 mt-1">
-            <Mail size={16} /> Carrières
-          </Link>
+          <p className="flex items-center gap-2 mt-1 text-[#6B7280]">
+            <Mail size={16} /> Blog (à venir)
+          </p>
+          <p className="flex items-center gap-2 mt-1 text-[#6B7280]">
+            <Mail size={16} /> Carrières (à venir)
+          </p>
         </div>
 
         {/* Col 3 : Légal */}
         <div>
           <h4 className="text-[#134E4A] font-semibold mb-2">Légal</h4>
 
-          <Link href="#" className="flex items-center gap-2 mt-1">
+          <p className="flex items-center gap-2 mt-1 text-[#6B7280]">
             <Mail size={16} /> Mentions légales
-          </Link>
+          </p>
 
           <Link href="/conf" className="flex items-center gap-2 mt-1">
             <Mail size={16} /> Confidentialité

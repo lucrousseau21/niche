@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import React from "react";
 import Link from "next/link";
 import Header from "@/components/Header";
+
+export const metadata: Metadata = {
+  title: "CGU | Niche.",
+  description:
+    "Conditions Générales d'Utilisation de Niche : fonctionnement du service, accès et responsabilités.",
+};
 
 export default function CGU() {
   return (

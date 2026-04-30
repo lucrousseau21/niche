@@ -112,7 +112,7 @@ export default function DashboardHome({
         {/* Stats Overview (Statique pour l'instant) */}
         <div className="bg-white rounded-3xl p-6 shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100 mb-10">
           <h3 className="text-[#1A3D3B] text-lg font-semibold mb-6">
-            Vue d&apos;ensemble
+            Vue d'ensemble
           </h3>
           <div className="grid grid-cols-3 gap-2 text-center">
             {/* Stat 1 */}
@@ -227,9 +227,10 @@ export default function DashboardHome({
           {loading ? (
              <div className="text-center text-gray-400 py-10">Chargement de vos veilles...</div>
           ) : recaps.length > 0 ? (
-            recaps.map((recap) => (
+            /* CORRECTION: Ajout de l'index dans la fonction map et sécurisation de la prop key */
+            recaps.map((recap, index) => (
               <NewsletterCard
-                key={recap.id}
+                key={recap.id ? recap.id : `recap-${index}`}
                 id={recap.id}
                 category={recap.categorie || "Actualité"}
                 title={recap.titre || "Sans titre"}
