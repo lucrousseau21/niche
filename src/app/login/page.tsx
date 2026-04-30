@@ -55,7 +55,28 @@ export default function Login() {
   }
 
   const handleGoogleLogin = async () => {
-    console.log("Google Login clicked");
+    setMessage(null);
+    setLoading(true);
+
+    try {
+      const {
+        error,
+      } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback?next=/`,
+        },
+      });
+
+      if (error) {
+        setMessage({ type: "error", text: error.message });
+      }
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Erreur inconnue.";
+      setMessage({ type: "error", text: errorMessage });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
