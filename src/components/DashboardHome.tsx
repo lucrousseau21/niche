@@ -14,7 +14,7 @@ type RecapItem = {
   created_at: string;
   titre: string;
   categorie: string;
-  resume: any; // JSON
+  resume: string | string[] | Record<string, string>;
   contenu: string;
 };
 
@@ -64,7 +64,7 @@ export default function DashboardHome({
           s.trim().toLowerCase()
         );
 
-        const filtered = (data || []).filter((r: any) => {
+        const filtered = (data || []).filter((r: RecapItem) => {
           // Check 'titre' as primary match, and 'categorie' as fallback.
           const title = r.titre ? r.titre.trim().toLowerCase() : "";
           const cat = r.categorie ? r.categorie.trim().toLowerCase() : "";
@@ -84,7 +84,7 @@ export default function DashboardHome({
   }, []);
 
   // --- 2. Fonction pour nettoyer le JSON du résumé ---
-  const parseResume = (resumeData: any): string[] => {
+  const parseResume = (resumeData: unknown): string[] => {
     try {
       let parsed = resumeData;
       // If it's a string, try to parse it
@@ -167,7 +167,7 @@ export default function DashboardHome({
         {/* Stats Overview (Statique pour l'instant) */}
         <div className="bg-white rounded-3xl p-6 shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100 mb-10">
           <h3 className="text-[#1A3D3B] text-lg font-semibold mb-6">
-            Vue d'ensemble
+            Vue d&apos;ensemble
           </h3>
           <div className="grid grid-cols-3 gap-2 text-center">
             {/* Stat 1 */}
@@ -302,8 +302,8 @@ export default function DashboardHome({
             /* CORRECTION: Ajout de l'index dans la fonction map et sécurisation de la prop key */
             recaps.map((recap, index) => (
               <NewsletterCard
-                key={recap.id ? recap.id : `recap-${index}`}
-                id={recap.id}
+                key={recap.id_recap ? recap.id_recap : `recap-${index}`}
+                id={recap.id_recap ? String(recap.id_recap) : undefined}
                 category={recap.categorie || "Actualité"}
                 title={recap.titre || "Sans titre"}
                 date={new Date(recap.created_at).toLocaleDateString("fr-FR")}

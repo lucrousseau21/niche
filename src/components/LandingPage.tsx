@@ -21,6 +21,7 @@ export default function LandingPage() {
   const features = [
     {
       title: "IA Personnalisée",
+      slug: "ia-personnalisee",
       desc: "Notre IA adapte le contenu à votre niveau et vos préférences pour une expérience sur-mesure.",
       icon: (
         <svg
@@ -41,6 +42,7 @@ export default function LandingPage() {
     },
     {
       title: "Dashboard Intuitif",
+      slug: "dashboard-intuitif",
       desc: "Suivez votre progression, organisez vos sujets favoris et accédez à votre historique.",
       icon: (
         <svg
@@ -62,6 +64,7 @@ export default function LandingPage() {
     },
     {
       title: "Base de Connaissances",
+      slug: "base-de-connaissances",
       desc: "Recherchez dans toutes vos newsletters passées avec notre moteur de recherche intelligent.",
       icon: (
         <svg
@@ -82,6 +85,7 @@ export default function LandingPage() {
     },
     {
       title: "Gain de Temps",
+      slug: "gain-de-temps",
       desc: "5 minutes par semaine au lieu de plusieurs heures. Concentrez-vous sur l'essentiel.",
       icon: (
         <svg
@@ -101,6 +105,7 @@ export default function LandingPage() {
     },
     {
       title: "Notifications Smart",
+      slug: "notifications-smart",
       desc: "Recevez uniquement les alertes importantes sur les sujets qui vous intéressent vraiment.",
       icon: (
         <svg
@@ -120,6 +125,7 @@ export default function LandingPage() {
     },
     {
       title: "Sources Vérifiées",
+      slug: "sources-verifiees",
       desc: "Contenu sourcé et vérifié par nos experts. Zéro fake news, que de l'information fiable.",
       icon: (
         <svg
@@ -183,6 +189,7 @@ export default function LandingPage() {
                 title={f.title}
                 desc={f.desc}
                 icon={f.icon}
+                slug={f.slug}
               />
             ))}
           </div>
