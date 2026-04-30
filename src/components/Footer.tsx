@@ -8,7 +8,7 @@ export default function Footer() {
       {/* --- TOP : Logo + Social --- */}
       <div>
         <img
-          src="/NICHE_LOGO.png"
+          src="/images/Logo 1.svg"
           alt="Niche Logo"
           className="h-10 w-auto mb-2 object-contain"
         />
@@ -65,7 +65,7 @@ export default function Footer() {
           </Link>
 
           <Link href="/CGU" className="flex items-center gap-2 mt-1">
-            <Mail size={16} /> CGV
+            <Mail size={16} /> CGU
           </Link>
         </div>
       </div>
