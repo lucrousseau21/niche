@@ -10,11 +10,12 @@ const supabase = createBrowserClient();
 
 // Type pour les données de la table 'recap'
 type RecapItem = {
-  id: string;
+  id_recap: number;
   created_at: string;
   titre: string;
   categorie: string;
   resume: any; // JSON
+  contenu: string;
 };
 
 export default function DashboardHome({
@@ -25,7 +26,7 @@ export default function DashboardHome({
   subjects: { nom: string; description: string }[];
 }) {
   const impactFilters = ["Fort impact", "Impact moyen", "Faible impact"];
-  
+
   // États pour les newsletters
   const [recaps, setRecaps] = useState<RecapItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,15 +38,44 @@ export default function DashboardHome({
   useEffect(() => {
     const fetchRecaps = async () => {
       setLoading(true);
+
+      // Extract subject names for filtering
+      const subjectNames = subjects.map((s) => s.nom);
+
+      if (subjectNames.length === 0) {
+        setRecaps([]);
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase
-        .from('recap')
-        .select('*')
-        .order('created_at', { ascending: false }); // Les plus récents en premier
+        .from("recap")
+        .select("*")
+        .order("created_at", { ascending: false });
 
       if (error) {
-        console.error("Erreur chargement recaps:", error);
+        console.error(
+          "Erreur chargement recaps details:",
+          JSON.stringify(error, null, 2)
+        );
       } else {
-        setRecaps(data || []);
+        // Normalize for comparison
+        const normalizedSubjects = subjectNames.map((s) =>
+          s.trim().toLowerCase()
+        );
+
+        const filtered = (data || []).filter((r: any) => {
+          // Check 'titre' as primary match, and 'categorie' as fallback.
+          const title = r.titre ? r.titre.trim().toLowerCase() : "";
+          const cat = r.categorie ? r.categorie.trim().toLowerCase() : "";
+
+          return (
+            normalizedSubjects.includes(title) ||
+            normalizedSubjects.includes(cat)
+          );
+        });
+
+        setRecaps(filtered);
       }
       setLoading(false);
     };
@@ -55,14 +85,38 @@ export default function DashboardHome({
 
   // --- 2. Fonction pour nettoyer le JSON du résumé ---
   const parseResume = (resumeData: any): string[] => {
-    if (Array.isArray(resumeData)) return resumeData;
-    if (typeof resumeData === 'string') {
-        try {
-            const parsed = JSON.parse(resumeData);
-            if (Array.isArray(parsed)) return parsed;
-        } catch (e) { return [resumeData]; }
+    try {
+      let parsed = resumeData;
+      // If it's a string, try to parse it
+      if (typeof resumeData === "string") {
+        parsed = JSON.parse(resumeData);
+      }
+
+      // Case 1: Array
+      if (Array.isArray(parsed)) return parsed;
+
+      // Case 2: Object with keys like titre_1, titre_2, etc.
+      if (typeof parsed === "object" && parsed !== null) {
+        // Extract values strictly from keys matching the pattern or just take all string values?
+        // User specific example showed "titre_1", "titre_2", etc.
+        // Let's take all values values that are strings, or specific keys if we want to be strict.
+        // Taking all values gives flexibility if keys change slightly (e.g. point_1).
+        const values = Object.values(parsed).filter(
+          (val) => typeof val === "string"
+        ) as string[];
+        if (values.length > 0) return values;
+      }
+
+      // Fallback if structure is unknown or empty
+      return ["Résumé non disponible"];
+    } catch (e) {
+      console.error("Error parsing resume:", e);
+      // If it was a simple string that failed parsing, return it as single point
+      if (typeof resumeData === "string" && resumeData.trim().length > 0)
+        return [resumeData];
+
+      return ["Résumé non disponible"];
     }
-    return ["Résumé non disponible"];
   };
 
   return (
@@ -99,7 +153,8 @@ export default function DashboardHome({
               </div>
               <div className="text-gray-500 text-sm">
                 {/* Exemple de stat dynamique simple */}
-                {recaps.length > 0 ? `1/${recaps.length}` : '0/0'} veilles consultées
+                {recaps.length > 0 ? `1/${recaps.length}` : "0/0"} veilles
+                consultées
               </div>
             </div>
           </div>
@@ -122,7 +177,9 @@ export default function DashboardHome({
               </span>
               <div className="text-3xl font-bold text-[#1A3D3B] mb-1">24</div>
               <div className="text-[10px] uppercase tracking-wide text-gray-400 font-medium leading-tight">
-                Newsletters<br />lues
+                Newsletters
+                <br />
+                lues
               </div>
             </div>
             {/* Stat 2 */}
@@ -132,7 +189,9 @@ export default function DashboardHome({
               </span>
               <div className="text-3xl font-bold text-[#1A3D3B] mb-1">18</div>
               <div className="text-[10px] uppercase tracking-wide text-gray-400 font-medium leading-tight">
-                Articles<br />sauvegardés
+                Articles
+                <br />
+                sauvegardés
               </div>
             </div>
             {/* Stat 3 */}
@@ -142,7 +201,9 @@ export default function DashboardHome({
               </span>
               <div className="text-3xl font-bold text-[#1A3D3B] mb-1">4.2h</div>
               <div className="text-[10px] uppercase tracking-wide text-gray-400 font-medium leading-tight">
-                Temps<br />économisé
+                Temps
+                <br />
+                économisé
               </div>
             </div>
           </div>
@@ -151,7 +212,16 @@ export default function DashboardHome({
         {/* Filters Toggle Button */}
         <div className="flex justify-center mb-8">
           <button className="bg-[#FFF9F0] text-[#1A3D3B] px-5 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 border border-[#EFE8D8] shadow-sm hover:bg-[#FFF5E5] transition-colors">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <line x1="4" y1="21" x2="4" y2="14"></line>
               <line x1="4" y1="10" x2="4" y2="3"></line>
               <line x1="12" y1="21" x2="12" y2="12"></line>
@@ -218,14 +288,16 @@ export default function DashboardHome({
         <div className="flex items-end justify-between mb-4 px-1">
           <h2 className="text-xl font-bold text-[#1A3D3B]">Veilles du jour</h2>
           <span className="text-xs font-medium text-gray-400 mb-1">
-            {recaps.length} résultat{recaps.length > 1 ? 's' : ''}
+            {recaps.length} résultat{recaps.length > 1 ? "s" : ""}
           </span>
         </div>
 
         {/* Feed List (Newsletters) */}
         <div className="space-y-4">
           {loading ? (
-             <div className="text-center text-gray-400 py-10">Chargement de vos veilles...</div>
+            <div className="text-center text-gray-400 py-10">
+              Chargement de vos veilles...
+            </div>
           ) : recaps.length > 0 ? (
             /* CORRECTION: Ajout de l'index dans la fonction map et sécurisation de la prop key */
             recaps.map((recap, index) => (
@@ -234,7 +306,7 @@ export default function DashboardHome({
                 id={recap.id}
                 category={recap.categorie || "Actualité"}
                 title={recap.titre || "Sans titre"}
-                date={new Date(recap.created_at).toLocaleDateString('fr-FR')}
+                date={new Date(recap.created_at).toLocaleDateString("fr-FR")}
                 bullets={parseResume(recap.resume)}
               />
             ))
@@ -244,7 +316,6 @@ export default function DashboardHome({
             </div>
           )}
         </div>
-
       </div>
     </div>
   );

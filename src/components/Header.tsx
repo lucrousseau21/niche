@@ -98,7 +98,7 @@ export default function Header() {
                 Fonctionnalités
               </Link>
               <Link
-                href="/pricing"
+                href="/#pricing"
                 className="text-gray-500 hover:text-[#1A3D3B] transition-colors"
               >
                 Tarifs
@@ -130,8 +130,12 @@ export default function Header() {
             <div className="relative w-[300px] h-full bg-[#1A3D3B] flex flex-col shadow-2xl animate-in slide-in-from-right duration-300">
               {/* Drawer Header */}
               <div className="p-8 pb-6">
-                <div className="font-bold text-3xl tracking-tighter text-white mb-6">
-                  Niche.
+                <div className="mb-6 relative">
+                  <img
+                    src="/NICHE_LOGO.png"
+                    alt="Niche Logo"
+                    className="h-12 w-auto object-contain brightness-0 invert"
+                  />
                 </div>
                 <div className="h-px w-full bg-white/10"></div>
               </div>

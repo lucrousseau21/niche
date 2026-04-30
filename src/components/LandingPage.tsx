@@ -5,7 +5,6 @@ import FeatureCard from "@/components/FeatureCard";
 import NewsletterCard from "@/components/NewsletterCard";
 
 export default function LandingPage() {
-  
   // 1. Données statiques pour l'exemple de la Landing Page
   const demoNewsletter = {
     category: "Intelligence Artificielle",
@@ -14,8 +13,8 @@ export default function LandingPage() {
     bullets: [
       "Google DeepMind dévoile AlphaFold 3 pour la modélisation moléculaire.",
       "L'UE vote une nouvelle régulation sur l'usage de l'IA dans la santé.",
-      "Nvidia lance une puce dédiée au calcul génomique ultra-rapide."
-    ]
+      "Nvidia lance une puce dédiée au calcul génomique ultra-rapide.",
+    ],
   };
 
   // Features data
@@ -225,7 +224,7 @@ export default function LandingPage() {
 
             <div className="flex justify-center">
               {/* 2. Affichage de la Newsletter avec les données statiques */}
-              <NewsletterCard 
+              <NewsletterCard
                 category={demoNewsletter.category}
                 date={demoNewsletter.date}
                 title={demoNewsletter.title}
@@ -288,7 +287,7 @@ export default function LandingPage() {
                 {[
                   "1 newsletter / semaine",
                   "Niches illimitées",
-                  "Accès basique",
+                  "Niche au choix",
                   "Avec publicités",
                 ].map((item, i) => (
                   <li
@@ -505,7 +504,7 @@ export default function LandingPage() {
       {/* CTA Section (Full Width Dark Green) */}
       <section id="cta" className="bg-[#1A3D3B] py-24 relative overflow-hidden">
         {/* Radial gradient effect */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent pointer-events-none"></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_top,var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent pointer-events-none"></div>
 
         <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
           <h2 className="title-font text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
