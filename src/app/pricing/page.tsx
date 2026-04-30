@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Tarifs | Niche.",
+  description:
+    "Comparez les offres Niche pour démarrer votre veille sectorielle, de l'essai gratuit à l'abonnement entreprise.",
+};
 
 export default function Pricing() {
   return (

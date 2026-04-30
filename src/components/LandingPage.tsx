@@ -21,6 +21,7 @@ export default function LandingPage() {
   const features = [
     {
       title: "IA Personnalisée",
+      slug: "ia-personnalisee",
       desc: "Notre IA adapte le contenu à votre niveau et vos préférences pour une expérience sur-mesure.",
       icon: (
         <svg
@@ -41,6 +42,7 @@ export default function LandingPage() {
     },
     {
       title: "Dashboard Intuitif",
+      slug: "dashboard-intuitif",
       desc: "Suivez votre progression, organisez vos sujets favoris et accédez à votre historique.",
       icon: (
         <svg
@@ -62,6 +64,7 @@ export default function LandingPage() {
     },
     {
       title: "Base de Connaissances",
+      slug: "base-de-connaissances",
       desc: "Recherchez dans toutes vos newsletters passées avec notre moteur de recherche intelligent.",
       icon: (
         <svg
@@ -82,6 +85,7 @@ export default function LandingPage() {
     },
     {
       title: "Gain de Temps",
+      slug: "gain-de-temps",
       desc: "5 minutes par semaine au lieu de plusieurs heures. Concentrez-vous sur l'essentiel.",
       icon: (
         <svg
@@ -101,6 +105,7 @@ export default function LandingPage() {
     },
     {
       title: "Notifications Smart",
+      slug: "notifications-smart",
       desc: "Recevez uniquement les alertes importantes sur les sujets qui vous intéressent vraiment.",
       icon: (
         <svg
@@ -120,6 +125,7 @@ export default function LandingPage() {
     },
     {
       title: "Sources Vérifiées",
+      slug: "sources-verifiees",
       desc: "Contenu sourcé et vérifié par nos experts. Zéro fake news, que de l'information fiable.",
       icon: (
         <svg
@@ -183,6 +189,7 @@ export default function LandingPage() {
                 title={f.title}
                 desc={f.desc}
                 icon={f.icon}
+                slug={f.slug}
               />
             ))}
           </div>
@@ -294,19 +301,36 @@ export default function LandingPage() {
                     key={i}
                     className="flex gap-3 text-sm text-gray-600 font-medium"
                   >
-                    <svg
-                      className="w-5 h-5 text-green-400 shrink-0"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
+                    {item === "Avec publicités" ? (
+                      <svg
+                        className="w-5 h-5 text-gray-400 shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                      >
+                        <circle cx="12" cy="12" r="9" />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 8h.01M12 12v4"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        className="w-5 h-5 text-green-400 shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
                     {item}
                   </li>
                 ))}
@@ -379,36 +403,33 @@ export default function LandingPage() {
             <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-xl shadow-gray-200/40 hover:border-gray-200 transition-all text-left relative h-full flex flex-col">
               <div className="mb-6">
                 <h3 className="title-font text-2xl font-bold text-[#1A3D3B] mb-2">
-                  Licence entreprise
+                  Entreprise
                 </h3>
                 <p className="text-sm text-gray-500">
-                  Avoir un accès illimité à nos fonctionnalités pour vos
-                  salariés
+                  Solution sur mesure pour les équipes et les intégrations.
                 </p>
               </div>
 
               <div className="mb-6 flex items-baseline gap-1">
-                <span className="text-4xl font-bold text-[#1A3D3B] tracking-tight">
+                <span className="text-5xl font-bold text-[#1A3D3B] tracking-tight">
                   Sur devis
                 </span>
-                <span className="text-gray-400 font-medium">/an</span>
               </div>
 
               <ul className="space-y-4 mb-8 flex-1">
                 {[
-                  "Une newsletters / jour",
-                  "Niches illimitées",
-                  "IA et fonctionnalités personnalisées",
-                  "Accès base de données",
-                  "Dashboard complet",
-                  "Podcast (à venir)",
+                  "Support prioritaire",
+                  "Intégrations API",
+                  "Sécurité avancée",
+                  "100% personnalisable", 
+                  "Accompagnement onboarding",
                 ].map((item, i) => (
                   <li
                     key={i}
                     className="flex gap-3 text-sm text-gray-600 font-medium"
                   >
                     <svg
-                      className="w-5 h-5 text-green-400 shrink-0"
+                      className="w-5 h-5 text-[#4ADE80] shrink-0"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -425,8 +446,8 @@ export default function LandingPage() {
                 ))}
               </ul>
 
-              <button className="w-full py-3.5 px-6 rounded-xl bg-[#4ADE80] hover:bg-[#4ADE80]/90 text-[#1A3D3B] font-bold transition-colors shadow-lg shadow-green-500/20">
-                Contacter Niche
+              <button className="w-full py-3.5 px-6 rounded-xl bg-[#1A3D3B] hover:bg-[#162e2d] text-white font-bold transition-colors shadow-lg shadow-black/10">
+                Contactez-nous
               </button>
             </div>
           </div>

@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+export const metadata: Metadata = {
+  title: "À propos | Niche.",
+  description:
+    "Découvrez Niche, la plateforme de veille stratégique qui simplifie l’analyse sectorielle pour les professionnels.",
+};
 
 export default function About() {
   return (

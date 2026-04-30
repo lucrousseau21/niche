@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
@@ -5,6 +6,38 @@ import Header from "@/components/Header";
 
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const supabase = await createClient();
+  const { data: recap } = await supabase
+    .from("recap")
+    .select("titre")
+    .eq("id_recap", params.id)
+    .single();
+
+  const title = recap?.titre
+    ? `Veille : ${recap.titre} | Niche.`
+    : "Veille introuvable | Niche.";
+  const description = recap?.titre
+    ? `Accédez à l’analyse Niche de la veille \"${recap.titre}\" et suivez l'actualité stratégique personnalisée.`
+    : "Cette veille n'a pas été trouvée.";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://niche.fr/newsletter/${params.id}`,
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+  };
 }
 
 export default async function NewsletterPage({ params }: PageProps) {

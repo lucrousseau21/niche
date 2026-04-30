@@ -14,7 +14,7 @@ type RecapItem = {
   created_at: string;
   titre: string;
   categorie: string;
-  resume: any; // JSON
+  resume: string | string[] | Record<string, string>;
   contenu: string;
 };
 
@@ -64,7 +64,7 @@ export default function DashboardHome({
           s.trim().toLowerCase()
         );
 
-        const filtered = (data || []).filter((r: any) => {
+        const filtered = (data || []).filter((r: RecapItem) => {
           // Check 'titre' as primary match, and 'categorie' as fallback.
           const title = r.titre ? r.titre.trim().toLowerCase() : "";
           const cat = r.categorie ? r.categorie.trim().toLowerCase() : "";
@@ -84,7 +84,7 @@ export default function DashboardHome({
   }, []);
 
   // --- 2. Fonction pour nettoyer le JSON du résumé ---
-  const parseResume = (resumeData: any): string[] => {
+  const parseResume = (resumeData: unknown): string[] => {
     try {
       let parsed = resumeData;
       // If it's a string, try to parse it
@@ -299,10 +299,11 @@ export default function DashboardHome({
               Chargement de vos veilles...
             </div>
           ) : recaps.length > 0 ? (
-            recaps.map((recap) => (
+            /* CORRECTION: Ajout de l'index dans la fonction map et sécurisation de la prop key */
+            recaps.map((recap, index) => (
               <NewsletterCard
-                key={recap.id_recap}
-                id={String(recap.id_recap)}
+                key={recap.id_recap ? recap.id_recap : `recap-${index}`}
+                id={recap.id_recap ? String(recap.id_recap) : undefined}
                 category={recap.categorie || "Actualité"}
                 title={recap.titre || "Sans titre"}
                 date={new Date(recap.created_at).toLocaleDateString("fr-FR")}

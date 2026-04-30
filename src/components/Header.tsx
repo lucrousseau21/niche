@@ -42,11 +42,11 @@ export default function Header() {
     <header className="fixed top-0 w-full z-50 bg-white shadow-sm border-b border-gray-50/50">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="inline-flex items-center">
           <img
-            src="/NICHE_LOGO.png"
-            alt="Niche Logo"
-            className="h-10 w-auto object-contain"
+            src="/images/Logo 1.svg"
+            alt="Niche"
+            className="h-10 w-auto"
           />
         </Link>
 
