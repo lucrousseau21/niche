@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createClient as createBrowserClient } from "@/lib/supabase/client";
+import { getAuthCallbackUrl } from "@/lib/supabase/site-url";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 
@@ -55,26 +56,39 @@ export default function Login() {
   }
 
   const handleGoogleLogin = async () => {
-  try {
+    setMessage(null);
     setLoading(true);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        // Cette URL doit être configurée dans ton dashboard Supabase
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
 
-    if (error) throw error;
-  } catch (err: any) {
-    setMessage({
-      type: "error",
-      text: "Erreur lors de la connexion avec Google : " + err.message,
-    });
-  } finally {
-    setLoading(false);
-  }
-};
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: getAuthCallbackUrl(),
+        },
+      });
+
+      if (error) throw error;
+
+      if (data?.url) {
+        window.location.href = data.url;
+        return;
+      }
+
+      setMessage({
+        type: "error",
+        text: "Impossible de démarrer la connexion Google. Vérifiez la configuration Supabase.",
+      });
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Erreur inconnue.";
+      setMessage({
+        type: "error",
+        text: "Erreur lors de la connexion avec Google : " + errorMessage,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div
