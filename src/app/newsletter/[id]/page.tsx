@@ -8,19 +8,21 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { id } = await params;
   const supabase = await createClient();
   const { data: recap } = await supabase
     .from("recap")
-    .select("titre")
-    .eq("id_recap", params.id)
+    .select("titre, sujet(nom)")
+    .eq("id_recap", id)
     .single();
 
-  const title = recap?.titre
-    ? `Veille : ${recap.titre} | Niche.`
-    : "Veille introuvable | Niche.";
+  const recapTitle = recap?.titre ?? "Veille";
+  const title = `Veille : ${recapTitle} | Niche.`;
   const description = recap?.titre
-    ? `Accédez à l’analyse Niche de la veille \"${recap.titre}\" et suivez l'actualité stratégique personnalisée.`
+    ? `Accédez à l’analyse Niche de la veille « ${recap.titre} » et suivez l'actualité stratégique personnalisée.`
     : "Cette veille n'a pas été trouvée.";
 
   return {
@@ -29,7 +31,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     openGraph: {
       title,
       description,
-      url: `https://niche.fr/newsletter/${params.id}`,
+      url: `https://niche.fr/newsletter/${id}`,
       type: "article",
     },
     twitter: {
@@ -46,9 +48,14 @@ export default async function NewsletterPage({ params }: PageProps) {
 
   const { data: recap, error } = await supabase
     .from("recap")
-    .select("*")
+    .select("id_recap, titre, contenu, created_at, sujet(nom)")
     .eq("id_recap", id)
     .single();
+
+  const sujetRaw = recap?.sujet as { nom: string } | { nom: string }[] | null;
+  const sujetNom = Array.isArray(sujetRaw)
+    ? sujetRaw[0]?.nom ?? null
+    : sujetRaw?.nom ?? null;
 
   if (error || !recap) {
     return (
@@ -107,7 +114,7 @@ export default async function NewsletterPage({ params }: PageProps) {
 
             <div className="flex items-center gap-3">
               <span className="bg-[#4ADE80] text-[#1A3D3B] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-                {recap.titre || "Actualité"}
+                {sujetNom || "Veille"}
               </span>
               <span className="text-white/60 text-xs font-medium bg-white/10 px-3 py-1 rounded-full">
                 📅 {dateStr}
@@ -117,11 +124,12 @@ export default async function NewsletterPage({ params }: PageProps) {
 
           {/* Title Section */}
           <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-[#F0FDF4] font-serif">
-            L&apos;essentiel de la semaine – {recap.titre}
+            {recap.titre || "L'essentiel de la semaine"}
           </h1>
           <p className="text-lg md:text-xl text-[#A7F3D0] max-w-2xl leading-relaxed">
-            3 infos sélectionnées par l&apos;IA et validées par un expert pour
-            votre veille stratégique.
+            {sujetNom
+              ? `Veille ${sujetNom} — points clés et analyse.`
+              : "Points clés et analyse pour votre veille stratégique."}
           </p>
         </div>
 
@@ -163,7 +171,7 @@ export default async function NewsletterPage({ params }: PageProps) {
               <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
               <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
             </svg>
-            Source : Analyse générée par IA & curations diverses
+            Source : Veille Niche
           </div>
         </div>
       </main>

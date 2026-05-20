@@ -1,54 +1,30 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { BsCurrencyBitcoin, BsGraphUp } from "react-icons/bs";
-import {
-  FaRobot,
-  FaLaptopCode,
-  FaBalanceScale,
-  FaMoneyBillWave,
-} from "react-icons/fa";
+import React, { useState, useEffect, useCallback } from "react";
 import { HiCheck } from "react-icons/hi";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-
-// --- Types ---
-type Niche = string;
+import { getNicheIcon } from "@/utils/nicheIcons";
+import { filterMvpSubjectIds } from "@/lib/mvp-subjects";
+import {
+  fetchMvpSubjectsCatalog,
+  fetchUserMvpSubjects,
+} from "@/lib/profil-preferences";
 
 interface NicheItem {
-  id: string;
-  name: Niche;
+  id: number;
+  name: string;
   icon: React.ReactNode;
 }
 
-const getNicheIcon = (nicheName: string): React.ReactNode => {
-  switch (nicheName.toLowerCase()) {
-    case "crypto":
-      return <BsCurrencyBitcoin className="text-3xl" />;
-    case "intelligence artificielle":
-    case "ia":
-      return <FaRobot className="text-3xl" />;
-    case "droit":
-      return <FaBalanceScale className="text-3xl" />;
-    case "marketing":
-      return <BsGraphUp className="text-3xl" />;
-    case "finance":
-      return <FaMoneyBillWave className="text-3xl" />;
-    case "tech":
-    case "technologie":
-      return <FaLaptopCode className="text-3xl" />;
-    default:
-      return <FaLaptopCode className="text-3xl text-gray-400" />;
-  }
-};
-
 const NicheCard: React.FC<{
-  niche: Niche;
+  niche: string;
   icon: React.ReactNode;
   isSelected: boolean;
   onSelect: () => void;
 }> = ({ niche, icon, isSelected, onSelect }) => (
   <button
+    type="button"
     onClick={onSelect}
     className={`
       relative p-4 rounded-xl flex flex-col items-center justify-center space-y-2 text-center 
@@ -61,7 +37,7 @@ const NicheCard: React.FC<{
     `}
   >
     <div className="mb-1">{icon}</div>
-    <span className="text-sm font-semibold">{niche}</span>
+    <span className="text-sm font-semibold leading-snug">{niche}</span>
     {isSelected && (
       <div className="absolute top-2 right-2 bg-[#66BB6A] rounded-full p-0.5 text-white">
         <HiCheck className="w-3 h-3" />
@@ -75,10 +51,7 @@ export default function SettingsNicheSelector() {
   const router = useRouter();
 
   const [availableNiches, setAvailableNiches] = useState<NicheItem[]>([]);
-  const [selectedNicheIds, setSelectedNicheIds] = useState<string[]>([]);
-  const [initialSelectedNicheIds, setInitialSelectedNicheIds] = useState<
-    string[]
-  >([]); // Track initial state
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<{
@@ -86,66 +59,48 @@ export default function SettingsNicheSelector() {
     text: string;
   } | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        // 1. Fetch available niches
-        const { data: subjectsData, error: subjectsError } = await supabase
-          .from("sujet")
-          .select("id_sujet, nom");
+  const loadData = useCallback(async () => {
+    setIsLoading(true);
+    setMessage(null);
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-        if (subjectsError) throw subjectsError;
+      const catalog = await fetchMvpSubjectsCatalog(supabase);
+      setAvailableNiches(
+        catalog.map((s) => ({
+          id: s.id_sujet,
+          name: s.nom,
+          icon: getNicheIcon(s.nom),
+        }))
+      );
 
-        const items: NicheItem[] = subjectsData.map(
-          (item: { id_sujet: any; nom: string }) => ({
-            id: String(item.id_sujet), // Force string
-            name: item.nom,
-            icon: getNicheIcon(item.nom),
-          })
-        );
-        setAvailableNiches(items);
-
-        // 2. Fetch current user selection
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (user) {
-          const { data: profileData, error: profileError } = await supabase
-            .from("profil")
-            .select("id_sujet")
-            .eq("user_id", user.id);
-
-          if (profileError) {
-            console.error("Error fetching profile:", profileError);
-          } else if (profileData) {
-            // Force string conversion for robust comparison
-            const ids = profileData.map((p: any) => String(p.id_sujet));
-            setSelectedNicheIds(ids);
-            setInitialSelectedNicheIds(ids);
-          }
-        }
-      } catch (error: any) {
-        console.error("Error loading data:", error);
-        setMessage({
-          type: "error",
-          text: "Erreur lors du chargement des préférences.",
-        });
-      } finally {
-        setIsLoading(false);
+      if (user) {
+        const chosen = await fetchUserMvpSubjects(supabase, user.id);
+        setSelectedIds(chosen.map((s) => s.id_sujet));
+      } else {
+        setSelectedIds([]);
       }
-    };
-
-    fetchData();
+    } catch (error) {
+      console.error("Error loading niches:", error);
+      setMessage({
+        type: "error",
+        text: "Erreur lors du chargement des préférences.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }, [supabase]);
 
-  const handleToggleNiche = (nicheId: string) => {
-    const idStr = String(nicheId);
-    setSelectedNicheIds((prev) => {
-      if (prev.includes(idStr)) return prev.filter((id) => id !== idStr);
-      return [...prev, idStr];
-    });
-    // Clear message when modifying
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  const handleToggle = (id: number) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
     if (message) setMessage(null);
   };
 
@@ -161,7 +116,8 @@ export default function SettingsNicheSelector() {
         return;
       }
 
-      if (selectedNicheIds.length === 0) {
+      const ids = filterMvpSubjectIds(selectedIds);
+      if (ids.length === 0) {
         setMessage({
           type: "error",
           text: "Veuillez sélectionner au moins une niche.",
@@ -169,74 +125,31 @@ export default function SettingsNicheSelector() {
         return;
       }
 
-      // Calculate diffs
-      const initialIds = new Set(initialSelectedNicheIds);
-      const currentIds = new Set(selectedNicheIds);
+      const res = await fetch("/api/profile/preferences", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subjectIds: ids }),
+      });
 
-      const idsToAdd = selectedNicheIds.filter((id) => !initialIds.has(id));
-      const idsToRemove = initialSelectedNicheIds.filter(
-        (id) => !currentIds.has(id)
-      );
-
-      if (idsToAdd.length === 0 && idsToRemove.length === 0) {
-        setIsSaving(false);
-        return; // No changes
+      const payload = await res.json();
+      if (!res.ok) {
+        throw new Error(payload.error ?? "Échec de la sauvegarde");
       }
 
-      // 1. Remove deselected
-      if (idsToRemove.length > 0) {
-        console.log("Deleting ids:", idsToRemove);
-        const { error: deleteError } = await supabase
-          .from("profil")
-          .delete()
-          .eq("user_id", user.id)
-          .in("id_sujet", idsToRemove); // idsToRemove are strings, PostgREST handles conversion
-
-        if (deleteError) throw deleteError;
-      }
-
-      // 2. Add new selected
-      if (idsToAdd.length > 0) {
-        // We need a grade for new entries.
-        // We try to use the grade from an existing profile entry if available, or default.
-        let currentGrade = "Débutant";
-        const { data: existingProfile } = await supabase
-          .from("profil")
-          .select("grade")
-          .eq("user_id", user.id)
-          .limit(1)
-          .maybeSingle(); // Use maybeSingle to avoid error if no rows
-
-        if (existingProfile && existingProfile.grade) {
-          currentGrade = existingProfile.grade;
-        }
-
-        const inserts = idsToAdd.map((subjectId) => ({
-          user_id: user.id,
-          id_sujet: subjectId, // string, converted automatically
-          grade: currentGrade,
-        }));
-
-        const { error: insertError } = await supabase
-          .from("profil")
-          .insert(inserts);
-
-        if (insertError) throw insertError;
-      }
-
-      // Update initial state to reflect saved changes
-      setInitialSelectedNicheIds(selectedNicheIds);
-
+      setSelectedIds(ids);
       setMessage({
         type: "success",
         text: "Préférences sauvegardées avec succès !",
       });
+      await loadData();
       router.refresh();
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error saving:", error);
       setMessage({
         type: "error",
-        text: "Erreur lors de la sauvegarde : " + error.message,
+        text:
+          "Erreur lors de la sauvegarde : " +
+          (error instanceof Error ? error.message : "inconnue"),
       });
     } finally {
       setIsSaving(false);
@@ -274,35 +187,35 @@ export default function SettingsNicheSelector() {
           </div>
         )}
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           {availableNiches.map((niche) => (
             <NicheCard
               key={niche.id}
               niche={niche.name}
               icon={niche.icon}
-              isSelected={selectedNicheIds.includes(niche.id)}
-              onSelect={() => handleToggleNiche(niche.id)}
+              isSelected={selectedIds.includes(niche.id)}
+              onSelect={() => handleToggle(niche.id)}
             />
           ))}
         </div>
 
         <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-100">
           <span className="text-sm text-gray-500 font-medium">
-            {selectedNicheIds.length} niche
-            {selectedNicheIds.length > 1 ? "s" : ""} sélectionnée
-            {selectedNicheIds.length > 1 ? "s" : ""}
+            {selectedIds.length} niche{selectedIds.length > 1 ? "s" : ""}{" "}
+            sélectionnée{selectedIds.length > 1 ? "s" : ""}
           </span>
           <button
+            type="button"
             onClick={handleSave}
             disabled={isSaving}
             className={`
-                        px-6 py-2.5 rounded-xl font-semibold text-white transition-all
-                        ${
-                          isSaving
-                            ? "bg-gray-400 cursor-not-allowed"
-                            : "bg-[#66BB6A] hover:bg-[#5da860] shadow-sm hover:shadow active:scale-95"
-                        }
-                    `}
+              px-6 py-2.5 rounded-xl font-semibold text-white transition-all
+              ${
+                isSaving
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-[#66BB6A] hover:bg-[#5da860] shadow-sm hover:shadow active:scale-95"
+              }
+            `}
           >
             {isSaving ? "Sauvegarde..." : "Enregistrer"}
           </button>
