@@ -1,0 +1,32 @@
+[
+  {
+    "id_sujet": 1,
+    "titre": "Next.js 15 et l'écosystème React en 2026",
+    "resume": {
+      "titre_1": "Partial Prerendering (PPR) stabilisé",
+      "titre_2": "Turbopack devient le bundler par défaut",
+      "titre_3": "Changement majeur sur les defaults du cache"
+    },
+    "contenu": "## Contexte\nL'écosystème React s'est stabilisé autour de Next.js 15 et de React 19 comme standards de production. Les concepts de Server Components et de Server Actions sont désormais adoptés massivement pour les applications métier.\n\n## Points clés\n- **Partial Prerendering (PPR) :** C'est la grande évolution. Il permet de combiner sur une même page une coque statique (générée au build) et des composants dynamiques streamés en temps réel.\n- **Turbopack par défaut :** Webpack tire sa révérence. Le bundler écrit en Rust est désormais activé par défaut pour le développement, divisant par 4 le temps de démarrage local.\n- **Refonte du cache :** Par défaut, les requêtes `fetch` et les Route Handlers ne sont plus mis en cache automatiquement. Les développeurs doivent désormais opter explicitement (*opt-in*) pour la mise en cache.\n\n## À retenir\nNext.js 15 met fin à l'ère des usines à gaz de configuration. Le framework privilégie la vitesse brute en développement avec Turbopack et un contrôle granulaire du rendu hybride grâce au PPR."
+  },
+  {
+    "id_sujet": 2,
+    "titre": "L'ère du GPT-5.5 et des agents financiers",
+    "resume": {
+      "titre_1": "Déploiement global de GPT-5.5 Instant",
+      "titre_2": "Claude se structure pour les workflows d'entreprise",
+      "titre_3": "Baisse massive du taux de détection des hallucinations"
+    },
+    "contenu": "## Contexte\nLe marché des LLM ne se résume plus à une simple course à la taille des modèles, mais s'oriente vers la spécialisation métier et la réduction drastique des erreurs pour des cas d'usage critiques.\n\n## Points clés\n- **GPT-5.5 Instant :** Devenu le nouveau modèle par défaut d'OpenAI, il affiche une baisse de plus de 50% des hallucinations sur les sujets complexes (finance, droit, médecine) par rapport aux versions précédentes.\n- **Agents d'entreprise par Anthropic :** Claude s'intègre nativement au cœur des outils bureautiques (Excel, Word) avec des templates d'agents autonomes capables de gérer des audits, des revues de résultats ou du KYC sans coupure de contexte.\n- **Course aux puces et infrastructures :** La compétition reste un enjeu de matériel, illustré par les investissements massifs des laboratoires d'IA auprès des géants du Cloud pour réserver de la capacité de calcul brute (TPU).\n\n## À retenir\nL'IA en 2026 devient une couche opérationnelle invisible. On passe des chatbots généralistes à des agents fiables, connectés à nos données et capables de chaîner des actions complexes de bout en bout."
+  },
+  {
+    "id_sujet": 3,
+    "titre": "Figma 2026 : Du design d'interface au 'Vibe Coding'",
+    "resume": {
+      "titre_1": "Figma AI s'impose dans le nettoyage des fichiers",
+      "titre_2": "Figma Sites et le prototypage de production",
+      "titre_3": "Code Connect unifie enfin le Design et le Dev"
+    },
+    "contenu": "## Contexte\nFigma a achevé sa mutation. L'outil n'est plus seulement une application de dessin vectoriel pour interfaces, mais une plateforme complète englobant la création de sites, les présentations et la génération de code.\n\n## Points clés\n- **Fonctionnalités Figma AI :** L'intelligence artificielle gère désormais la corvée du renommage automatique des calques, la recherche visuelle de composants similaires dans l'organisation et la réécriture contextuelle de micro-copies (UX writing).\n- **Figma Sites & Make :** L'introduction de ces modules permet de passer d'un simple 'vibe design' à un site web fonctionnel et publiable sans coder, tout en respectant le Design System de l'équipe.\n- **Code Connect et Flexbox/Grid :** L'export de code s'améliore nettement grâce à l'IA qui analyse la structure globale pour générer du code CSS (Grid et Flexbox) propre et sémantique, directement relié aux composants React ou Storybook de production.\n\n## À retenir\nLa frontière entre designer et développeur continue de s'estomper. Figma se positionne comme l'outil central de l'équipe produit, capable de traduire visuellement une idée en composants de code quasi prêts pour la production."
+  }
+]

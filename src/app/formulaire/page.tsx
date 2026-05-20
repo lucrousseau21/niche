@@ -3,16 +3,12 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { BsCurrencyBitcoin, BsGraphUp } from "react-icons/bs";
-import {
-  FaRobot,
-  FaLaptopCode,
-  FaBalanceScale,
-  FaMoneyBillWave,
-} from "react-icons/fa";
 import { HiCheck, HiSparkles } from "react-icons/hi";
 import Header from "@/components/Header";
 import { createClient as createBrowserClient } from "@/lib/supabase/client";
+import { getNicheIcon } from "@/utils/nicheIcons";
+import { fetchMvpSubjectsCatalog } from "@/lib/profil-preferences";
+import { filterMvpSubjectIds } from "@/lib/mvp-subjects";
 
 const supabase = createBrowserClient();
 
@@ -47,27 +43,6 @@ interface NicheSelectorProps {
   isLoading: boolean;
   error: string | null;
 }
-
-const getNicheIcon = (nicheName: string): React.ReactNode => {
-  switch (nicheName.toLowerCase()) {
-    case "crypto":
-      return <BsCurrencyBitcoin className="text-3xl" />;
-    case "intelligence artificielle":
-    case "ia":
-      return <FaRobot className="text-3xl" />;
-    case "droit":
-      return <FaBalanceScale className="text-3xl" />;
-    case "marketing":
-      return <BsGraphUp className="text-3xl" />;
-    case "finance":
-      return <FaMoneyBillWave className="text-3xl" />;
-    case "tech":
-    case "technologie":
-      return <FaLaptopCode className="text-3xl" />;
-    default:
-      return <FaLaptopCode className="text-3xl text-gray-400" />;
-  }
-};
 
 const NicheCard: React.FC<{
   niche: Niche;
@@ -295,27 +270,18 @@ export default function OnboardingPage() {
       setIsLoadingNiches(true);
       setNicheError(null);
 
-      const { data, error } = await supabase
-        .from("sujet")
-        .select("id_sujet, nom");
-
-      if (error) {
-        setNicheError(error.message);
+      const catalog = await fetchMvpSubjectsCatalog(supabase);
+      if (catalog.length === 0) {
+        setNicheError("Aucune niche disponible.");
         setIsLoadingNiches(false);
-        // Fallback removed or adjusted - identifiers are needed.
-        // Assuming database is populated or we can't really proceed with saving IDs.
         return;
       }
 
-      // Filter out duplicate names if any (though IDs should be unique)
-      // and map to NicheItem
-      const items: NicheItem[] = data.map(
-        (item: { id_sujet: any; nom: string }) => ({
-          id: item.id_sujet,
-          name: item.nom,
-          icon: getNicheIcon(item.nom),
-        })
-      );
+      const items: NicheItem[] = catalog.map((item) => ({
+        id: String(item.id_sujet),
+        name: item.nom,
+        icon: getNicheIcon(item.nom),
+      }));
 
       setAvailableNiches(items);
       setIsLoadingNiches(false);
@@ -371,36 +337,20 @@ export default function OnboardingPage() {
           return;
         }
 
-        // Clean up previous entries to avoid collisions/duplicates on retry
-        // and ensure we save the latest selection.
-        const { error: deleteError } = await supabase
-          .from("profil")
-          .delete()
-          .eq("user_id", user.id);
-
-        if (deleteError) {
-          console.error("Error clearing old profile:", deleteError);
-          // We continue, maybe it failed because no rows existed, or permissions.
-          // Ideally we should stop, but let's try to insert.
-        }
-
-        const inserts = selectedNicheIds.map((subjectId) => ({
-          user_id: user.id,
-          id_sujet: subjectId,
-          grade: selectedLevel,
-        }));
-
-        const { error: profileError } = await supabase
-          .from("profil")
-          .insert(inserts);
-
-        if (profileError) {
-          console.error("Profile save error:", profileError);
-          alert(
-            `Erreur lors de la sauvegarde du profil : ${profileError.message}\n(Vérifiez que votre table 'profil' autorise plusieurs lignes par utilisateur)`
-          );
+        const ids = filterMvpSubjectIds(selectedNicheIds);
+        const res = await fetch("/api/profile/preferences", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            subjectIds: ids,
+            grade: selectedLevel,
+          }),
+        });
+        const payload = await res.json();
+        if (!res.ok) {
+          alert(payload.error ?? "Erreur lors de la sauvegarde du profil.");
         } else {
-          router.push("/dashboard");
+          router.push("/");
         }
       } catch (err: any) {
         alert(`Erreur inattendue : ${err.message || err}`);

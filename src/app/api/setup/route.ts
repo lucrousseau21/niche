@@ -6,7 +6,7 @@ const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseKey) {
   console.warn(
-    "WARNING: SUPABASE_SERVICE_ROLE_KEY is missing. setup/ingest might fail due to RLS."
+    "WARNING: SUPABASE_SERVICE_ROLE_KEY is missing. setup might fail due to RLS."
   );
 }
 
@@ -22,42 +22,68 @@ const supabase = createClient(
   }
 );
 
+const MVP_SUBJECTS = [
+  {
+    id_sujet: 1,
+    nom: "Développement Fullstack & Web3",
+    description:
+      "Frameworks, architectures, smart contracts et écosystème Web3.",
+  },
+  {
+    id_sujet: 2,
+    nom: "Intelligence Artificielle & Data",
+    description: "LLM, data engineering, MLOps et outils d'analyse.",
+  },
+  {
+    id_sujet: 3,
+    nom: "Design d'Interface & UX",
+    description: "UI, accessibilité, design systems et recherche utilisateur.",
+  },
+] as const;
+
 export async function POST() {
-  console.log("Starting Setup...");
+  console.log("Starting MVP subjects setup...");
   try {
-    // 1. Ensure Topic 'Football' exists in 'sujet'
-    console.log("Checking Sujet Football...");
-    const { data: existingSujet, error: findError } = await supabase
-      .from("sujet")
-      .select("id_sujet")
-      .ilike("nom", "Football")
-      .maybeSingle();
+    const results: { nom: string; id_sujet?: number; status: string }[] = [];
 
-    if (findError) console.error("Error finding sujet:", findError);
+    for (const subject of MVP_SUBJECTS) {
+      const { data: existing, error: findError } = await supabase
+        .from("sujet")
+        .select("id_sujet, nom")
+        .eq("nom", subject.nom)
+        .maybeSingle();
 
-    if (!existingSujet) {
-      console.log("Creating Sujet 'Football'...");
-      const { error: insertError } = await supabase.from("sujet").insert({
-        nom: "Football",
-        description: "All about Football news",
-      });
-
-      if (insertError) {
-        console.error("Sujet creation failed:", insertError);
-        throw insertError;
+      if (findError) {
+        console.error(`Error finding sujet ${subject.nom}:`, findError);
+        throw findError;
       }
-      console.log("Sujet 'Football' created.");
-    } else {
-      console.log("Sujet 'Football' already exists:", existingSujet.id_sujet);
-    }
 
-    // Since we don't have a 'source' table in the new schema, we are done here.
-    // The sources are hardcoded in src/lib/ingest.ts for now.
+      if (existing) {
+        results.push({
+          nom: subject.nom,
+          id_sujet: existing.id_sujet,
+          status: "already_exists",
+        });
+        continue;
+      }
+
+      const { error: upsertError } = await supabase
+        .from("sujet")
+        .upsert(subject, { onConflict: "id_sujet" });
+
+      if (upsertError) throw upsertError;
+
+      results.push({
+        nom: subject.nom,
+        id_sujet: subject.id_sujet,
+        status: "created",
+      });
+    }
 
     return NextResponse.json({
       success: true,
-      message:
-        "Football setup complete (Sujet created, sources configured in code)",
+      message: "MVP subjects ready",
+      subjects: results,
     });
   } catch (error) {
     console.error("Setup API Error:", error);
