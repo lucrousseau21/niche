@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { filterMvpSubjectIds } from "@/lib/mvp-subjects";
 import { saveUserMvpSubjects } from "@/lib/profil-preferences";
 
+/**
+ * Sauvegarde les niches via la session utilisateur (clé anon + cookies).
+ * Ne pas utiliser la service role ici : en prod Vercel une clé mal configurée
+ * provoque « Invalid API key ».
+ */
 export async function POST(request: Request) {
   const supabase = await createClient();
   const {
@@ -29,24 +33,20 @@ export async function POST(request: Request) {
     );
   }
 
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  const client = serviceKey
-    ? createServiceClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        serviceKey,
-        { auth: { persistSession: false } }
-      )
-    : supabase;
-
   const { error } = await saveUserMvpSubjects(
-    client,
+    supabase,
     user.id,
     ids,
     body.grade
   );
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const msg = error.message ?? "Échec de la sauvegarde";
+    const hint =
+      msg.includes("policy") || msg.includes("permission")
+        ? " — vérifiez les politiques RLS sur la table profil (insert/delete pour l'utilisateur connecté)."
+        : "";
+    return NextResponse.json({ error: msg + hint }, { status: 500 });
   }
 
   return NextResponse.json({ success: true, subjectIds: ids });
