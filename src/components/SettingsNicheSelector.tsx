@@ -1,20 +1,21 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { HiCheck } from "react-icons/hi";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { getNicheIcon } from "@/utils/nicheIcons";
 import { filterMvpSubjectIds } from "@/lib/mvp-subjects";
-import {
-  fetchMvpSubjectsCatalog,
-  fetchUserMvpSubjects,
-} from "@/lib/profil-preferences";
+import { fetchMvpSubjectsCatalog } from "@/lib/profil-preferences";
 
 interface NicheItem {
   id: number;
   name: string;
   icon: React.ReactNode;
+}
+
+function isNicheSelected(selectedIds: number[], nicheId: number): boolean {
+  return selectedIds.some((id) => Number(id) === Number(nicheId));
 }
 
 const NicheCard: React.FC<{
@@ -47,7 +48,6 @@ const NicheCard: React.FC<{
 );
 
 export default function SettingsNicheSelector() {
-  const supabase = createClient();
   const router = useRouter();
 
   const [availableNiches, setAvailableNiches] = useState<NicheItem[]>([]);
@@ -59,65 +59,82 @@ export default function SettingsNicheSelector() {
     text: string;
   } | null>(null);
 
-  const loadData = useCallback(async () => {
-    setIsLoading(true);
-    setMessage(null);
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      const catalog = await fetchMvpSubjectsCatalog(supabase);
-      setAvailableNiches(
-        catalog.map((s) => ({
-          id: s.id_sujet,
-          name: s.nom,
-          icon: getNicheIcon(s.nom),
-        }))
-      );
-
-      if (user) {
-        const chosen = await fetchUserMvpSubjects(supabase, user.id);
-        setSelectedIds(chosen.map((s) => s.id_sujet));
-      } else {
-        setSelectedIds([]);
-      }
-    } catch (error) {
-      console.error("Error loading niches:", error);
-      setMessage({
-        type: "error",
-        text: "Erreur lors du chargement des préférences.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }, [supabase]);
-
   useEffect(() => {
+    let cancelled = false;
+
+    async function loadData() {
+      setIsLoading(true);
+      try {
+        const supabase = createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        const catalog = await fetchMvpSubjectsCatalog(supabase);
+        if (cancelled) return;
+
+        setAvailableNiches(
+          catalog.map((s) => ({
+            id: s.id_sujet,
+            name: s.nom,
+            icon: getNicheIcon(s.nom),
+          }))
+        );
+
+        if (user) {
+          const res = await fetch("/api/profile/preferences", {
+            cache: "no-store",
+          });
+          const payload = await res.json();
+          if (!cancelled) {
+            if (res.ok) {
+              setSelectedIds(
+                filterMvpSubjectIds(payload.subjectIds ?? [])
+              );
+            } else {
+              setSelectedIds([]);
+            }
+          }
+        } else if (!cancelled) {
+          setSelectedIds([]);
+        }
+      } catch (error) {
+        console.error("Error loading niches:", error);
+        if (!cancelled) {
+          setMessage({
+            type: "error",
+            text: "Erreur lors du chargement des préférences.",
+          });
+        }
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    }
+
     loadData();
-  }, [loadData]);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleToggle = (id: number) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
+    setSelectedIds((prev) => {
+      const normalized = filterMvpSubjectIds(prev);
+      return normalized.includes(id)
+        ? normalized.filter((x) => x !== id)
+        : [...normalized, id];
+    });
     if (message) setMessage(null);
   };
 
   const handleSave = async () => {
     setIsSaving(true);
     setMessage(null);
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
-        setMessage({ type: "error", text: "Utilisateur non connecté." });
-        return;
-      }
 
-      const ids = filterMvpSubjectIds(selectedIds);
-      if (ids.length === 0) {
+    const idsToSave = filterMvpSubjectIds(selectedIds);
+
+    try {
+      if (idsToSave.length === 0) {
         setMessage({
           type: "error",
           text: "Veuillez sélectionner au moins une niche.",
@@ -128,20 +145,21 @@ export default function SettingsNicheSelector() {
       const res = await fetch("/api/profile/preferences", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subjectIds: ids }),
+        body: JSON.stringify({ subjectIds: idsToSave }),
       });
-
       const payload = await res.json();
       if (!res.ok) {
         throw new Error(payload.error ?? "Échec de la sauvegarde");
       }
 
-      setSelectedIds(ids);
+      const savedIds = filterMvpSubjectIds(
+        payload.subjectIds ?? idsToSave
+      );
+      setSelectedIds(savedIds);
       setMessage({
         type: "success",
         text: "Préférences sauvegardées avec succès !",
       });
-      await loadData();
       router.refresh();
     } catch (error) {
       console.error("Error saving:", error);
@@ -155,6 +173,8 @@ export default function SettingsNicheSelector() {
       setIsSaving(false);
     }
   };
+
+  const selectedCount = filterMvpSubjectIds(selectedIds).length;
 
   if (isLoading) {
     return (
@@ -193,7 +213,7 @@ export default function SettingsNicheSelector() {
               key={niche.id}
               niche={niche.name}
               icon={niche.icon}
-              isSelected={selectedIds.includes(niche.id)}
+              isSelected={isNicheSelected(selectedIds, niche.id)}
               onSelect={() => handleToggle(niche.id)}
             />
           ))}
@@ -201,8 +221,8 @@ export default function SettingsNicheSelector() {
 
         <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-100">
           <span className="text-sm text-gray-500 font-medium">
-            {selectedIds.length} niche{selectedIds.length > 1 ? "s" : ""}{" "}
-            sélectionnée{selectedIds.length > 1 ? "s" : ""}
+            {selectedCount} niche{selectedCount > 1 ? "s" : ""} sélectionnée
+            {selectedCount > 1 ? "s" : ""}
           </span>
           <button
             type="button"

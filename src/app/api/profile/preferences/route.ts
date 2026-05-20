@@ -1,13 +1,29 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceRoleClient } from "@/lib/supabase/service-role";
 import { filterMvpSubjectIds } from "@/lib/mvp-subjects";
-import { saveUserMvpSubjects } from "@/lib/profil-preferences";
+import {
+  fetchUserMvpSubjects,
+  saveUserMvpSubjects,
+  getUserMvpSubjectIds,
+} from "@/lib/profil-preferences";
 
-/**
- * Sauvegarde les niches via la session utilisateur (clé anon + cookies).
- * Ne pas utiliser la service role ici : en prod Vercel une clé mal configurée
- * provoque « Invalid API key ».
- */
+export async function GET() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+  }
+
+  const subjectIds = await getUserMvpSubjectIds(supabase, user.id);
+  const subjects = await fetchUserMvpSubjects(supabase, user.id);
+
+  return NextResponse.json({ subjectIds, subjects });
+}
+
 export async function POST(request: Request) {
   const supabase = await createClient();
   const {
@@ -33,21 +49,25 @@ export async function POST(request: Request) {
     );
   }
 
-  const { error } = await saveUserMvpSubjects(
-    supabase,
+  const admin = createServiceRoleClient();
+  const writeClient = admin ?? supabase;
+
+  const { error, savedIds } = await saveUserMvpSubjects(
+    writeClient,
     user.id,
     ids,
     body.grade
   );
 
   if (error) {
-    const msg = error.message ?? "Échec de la sauvegarde";
-    const hint =
-      msg.includes("policy") || msg.includes("permission")
-        ? " — vérifiez les politiques RLS sur la table profil (insert/delete pour l'utilisateur connecté)."
-        : "";
-    return NextResponse.json({ error: msg + hint }, { status: 500 });
+    const hint = admin
+      ? ""
+      : " Ajoutez SUPABASE_SERVICE_ROLE_KEY (clé service_role Supabase) sur Vercel, ou exécutez supabase/replace-user-mvp-subjects.sql.";
+    return NextResponse.json(
+      { error: (error.message ?? "Échec de la sauvegarde") + hint },
+      { status: 500 }
+    );
   }
 
-  return NextResponse.json({ success: true, subjectIds: ids });
+  return NextResponse.json({ success: true, subjectIds: savedIds });
 }

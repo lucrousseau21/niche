@@ -34,8 +34,17 @@ export default function DashboardHome({
     let cancelled = false;
 
     const loadSubjects = async () => {
-      const fresh = await fetchUserMvpSubjects(supabase, user.id);
-      if (!cancelled) setSubjects(fresh);
+      const res = await fetch("/api/profile/preferences", {
+        cache: "no-store",
+      });
+      if (cancelled) return;
+      if (res.ok) {
+        const payload = await res.json();
+        setSubjects(payload.subjects ?? []);
+      } else {
+        const fresh = await fetchUserMvpSubjects(supabase, user.id);
+        if (!cancelled) setSubjects(fresh);
+      }
     };
 
     loadSubjects();
