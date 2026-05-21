@@ -21,7 +21,7 @@ const plans = [
       "Avec publicités",
     ],
     buttonText: "Commencer gratuitement",
-    href: "/checkout?plan=Découverte&price=0€",
+    href: "/paiement?plan=Découverte&price=0€",
     popular: false,
   },
   {
@@ -36,7 +36,7 @@ const plans = [
       "Dashboard complet",
     ],
     buttonText: "Passer au Premium",
-    href: "/checkout?plan=Premium&price=5.90€",
+    href: "/paiement?plan=Premium&price=5.90€",
     popular: true, // Met en valeur cette carte
   },
   {
@@ -123,7 +123,7 @@ export default function Pricing() {
                   </ul>
                 </div>
 
-                {/* Bouton d'action */}
+                {/* Bouton d'action vers /paiement */}
                 <div>
                   <Link
                     href={plan.href}

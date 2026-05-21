@@ -1,180 +1,112 @@
-import Link from "next/link";
 import type { Metadata } from "next";
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import CheckoutForm from "./CheckoutForm";
+import StripeElementsWrapper from "./StripeElementsWrapper";
 
 export const metadata: Metadata = {
   title: "Paiement - Niche",
-  description: "Récapitulatif de l'abonnement choisi avant le paiement.",
+  description: "Finalisez votre abonnement en toute sécurité.",
 };
 
-const plans: Record<
-  string,
-  {
-    price: string;
-    description: string;
-    features: string[];
-  }
-> = {
+const plans: Record<string, { price: string; description: string; features: string[] }> = {
   "Découverte": {
     price: "0€",
     description: "Testez Niche gratuitement avant de passer à une offre payante.",
-    features: [
-      "1 newsletter / semaine",
-      "Niches illimitées",
-      "Accès basique",
-      "Avec publicités",
-    ],
-  },
-  "Particuliers": {
-    price: "4.92€",
-    description: "Pour un usage personnel léger.",
-    features: [
-      "2 newsletters / semaine",
-      "Sans publicités",
-      "Suggestions IA",
-      "Support email",
-    ],
+    features: ["1 newsletter / semaine", "Niches illimitées", "Accès basique", "Avec publicités"],
   },
   "Premium": {
     price: "5.90€",
     description: "Accès illimité à toutes les fonctionnalités premium.",
-    features: [
-      "Une newsletter / jour",
-      "Niches illimitées",
-      "IA personnalisée",
-      "Accès base de données",
-      "Dashboard complet",
-      "Podcast (à venir)",
-    ],
-  },
-  "Pro Level 1": {
-    price: "25€",
-    description: "Pour les créateurs et freelances.",
-    features: [
-      "5 newsletters / semaine",
-      "Alertes secteur",
-      "3 utilisateurs",
-      "Dashboard simplifié",
-    ],
-  },
-  "Pro Level 2": {
-    price: "208€",
-    description: "Pour les équipes en croissance.",
-    features: [
-      "Newsletter quotidienne",
-      "Intégrations API",
-      "Support prioritaire",
-      "Tableau de bord avancé",
-    ],
-  },
-  "École": {
-    price: "208€",
-    description: "Pour les établissements et formations.",
-    features: [
-      "Accès multi-comptes",
-      "Ressources pédagogiques",
-      "Onboarding dédié",
-      "Suivi des usages",
-    ],
-  },
-  "Entreprise": {
-    price: "Sur devis",
-    description: "Offre sur mesure pour grands comptes.",
-    features: [
-      "SLA et sécurité avancée",
-      "Accompagnement dédié",
-      "Intégrations personnalisées",
-      "Rapports sur mesure",
-    ],
+    features: ["Une newsletter / jour", "Niches illimitées", "IA personnalisée", "Accès base de données", "Dashboard complet"],
   },
 };
 
-// Modification ici : SearchParams devient une Promise pour Next.js 15
-type SearchParams = Promise<{
-  plan?: string | string[];
-  price?: string | string[];
-}>;
+type SearchParams = Promise<{ plan?: string | string[]; price?: string | string[] }>;
+const normalizeParam = (value?: string | string[]) => Array.isArray(value) ? value[0] : value;
 
-const normalizeParam = (value?: string | string[]) =>
-  Array.isArray(value) ? value[0] : value;
-
-// Modification ici : le composant devient async
-export default async function CheckoutPage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
-  // Modification ici : on "await" la Promise searchParams avant de l'utiliser
+export default async function CheckoutPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
-
   const planName = normalizeParam(params?.plan) ?? "Aucun plan sélectionné";
   const plan = plans[planName];
   const price = normalizeParam(params?.price) ?? plan?.price ?? "-";
+
+  // Montant à envoyer à l'API
+  const numericAmount = planName === "Premium" ? 5.90 : 0;
+  let clientSecret = "";
+
+  // Si c'est un plan payant, on demande l'autorisation à notre API Stripe
+  if (numericAmount > 0) {
+    try {
+      // Note : assure-toi que le port est bien 3000
+      const response = await fetch(`http://localhost:3000/api/create-payment-intent`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ planName, amount: numericAmount }),
+        cache: "no-store", // Évite que Next.js mette le secret en cache
+      });
+      const data = await response.json();
+      clientSecret = data.clientSecret;
+    } catch (e) {
+      console.error("Erreur d'initialisation Stripe", e);
+    }
+  }
+
+  // Action serveur alternative pour le plan 100% gratuit
+  async function handleFreePlan() {
+    "use server";
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) redirect("/login");
+    
+    await supabase.from("subscriptions").upsert(
+      { user_id: user.id, plan_name: planName, status: "active", updated_at: new Date().toISOString() },
+      { onConflict: "user_id" }
+    );
+    redirect("/settings?success=true");
+  }
 
   return (
     <div className="min-h-screen bg-[#F7FAF6]">
       <div className="max-w-4xl mx-auto px-6 py-16">
         <div className="rounded-3xl border border-gray-200 bg-white p-10 shadow-xl shadow-gray-200/50">
+          
           <div className="mb-8 text-center">
-            <p className="text-sm uppercase tracking-[0.2em] text-[#1A3D3B]/70">
-              Paiement
-            </p>
-            <h1 className="mt-4 text-4xl font-bold text-[#1A3D3B]">
-              Récapitulatif de votre abonnement
-            </h1>
-            <p className="mt-3 text-gray-500">
-              Vérifiez votre choix avant de finaliser votre abonnement.
-            </p>
+            <p className="text-sm uppercase tracking-[0.2em] text-[#1A3D3B]/70 font-semibold">Paiement Sécurisé</p>
+            <h1 className="mt-4 text-4xl font-bold text-[#1A3D3B] tracking-tight">Finalisez votre abonnement</h1>
           </div>
 
           <div className="space-y-8">
             <div className="rounded-3xl border border-[#E6F4EA] bg-[#F2FBF4] p-8">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="text-sm uppercase tracking-[0.18em] text-[#1A3D3B]/70">
-                    Offre sélectionnée
-                  </p>
-                  <h2 className="mt-2 text-3xl font-bold text-[#1A3D3B]">
-                    {planName}
-                  </h2>
+                  <p className="text-sm uppercase tracking-[0.18em] text-[#1A3D3B]/70 font-medium">Offre sélectionnée</p>
+                  <h2 className="mt-2 text-3xl font-bold text-[#1A3D3B]">{planName}</h2>
                 </div>
-                <div className="rounded-3xl bg-white px-5 py-4 text-center shadow-sm shadow-green-200/50">
+                <div className="rounded-3xl bg-white px-5 py-4 text-center shadow-sm shadow-green-200/50 min-w-[125px]">
                   <p className="text-sm text-gray-500">Prix</p>
                   <p className="mt-2 text-4xl font-bold text-[#1A3D3B]">{price}</p>
-                  {price !== "Sur devis" ? <span className="text-sm text-gray-500">/ mois</span> : null}
+                  {price !== "Sur devis" && price !== "0€" && <span className="text-sm text-gray-500">/ mois</span>}
                 </div>
               </div>
-
-              <p className="mt-6 text-gray-600">{plan?.description ?? "Aucune description disponibles pour ce plan."}</p>
             </div>
 
-            <div className="rounded-3xl border border-gray-200 bg-white p-8">
-              <h3 className="text-xl font-semibold text-[#1A3D3B] mb-4">Ce que ce plan inclut</h3>
-              <ul className="grid gap-3 sm:grid-cols-2">
-                {(plan?.features ?? ["Aucune fonctionnalité disponible"]).map((feature, i) => (
-                  <li key={i} className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-[#F7FAF6] p-4 text-sm text-[#1A3D3B]">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#4ADE80]/20 text-[#1A3D3B]">
-                      ✓
-                    </span>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {/* LOGIQUE D'AFFICHAGE */}
+            {planName === "Découverte" ? (
+              <form action={handleFreePlan} className="text-center bg-white p-8 border border-gray-200 rounded-3xl">
+                <h3 className="text-xl font-bold text-[#1A3D3B] mb-4">Aucune carte requise</h3>
+                <button type="submit" className="bg-[#1A3D3B] text-white px-8 py-3 rounded-2xl font-semibold">Activer mon offre gratuite</button>
+              </form>
+            ) : clientSecret ? (
+              <StripeElementsWrapper clientSecret={clientSecret}>
+                <CheckoutForm price={price} />
+              </StripeElementsWrapper>
+            ) : (
+              <div className="p-8 text-center text-gray-500 bg-white border border-gray-200 rounded-3xl">
+                Connexion sécurisée à la banque en cours...
+              </div>
+            )}
 
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <Link
-                href="/#pricing"
-                className="inline-flex justify-center rounded-2xl border border-gray-200 bg-white px-6 py-3 text-sm font-semibold text-[#1A3D3B] transition hover:bg-gray-50"
-              >
-                Retour aux offres
-              </Link>
-              <button
-                type="button"
-                className="inline-flex justify-center rounded-2xl bg-[#1A3D3B] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#162e2d]"
-              >
-                Payer maintenant
-              </button>
-            </div>
           </div>
         </div>
       </div>
