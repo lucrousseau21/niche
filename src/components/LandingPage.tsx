@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Hero from "@/components/Hero";
 import FeatureCard from "@/components/FeatureCard";
 import NewsletterCard from "@/components/NewsletterCard";
@@ -336,9 +337,12 @@ export default function LandingPage() {
                 ))}
               </ul>
 
-              <button className="w-full py-3.5 px-6 rounded-xl bg-gray-100 hover:bg-gray-200 text-[#1A3D3B] font-bold transition-colors">
+              <Link
+                href={`/checkout?plan=${encodeURIComponent("Découverte")}&price=${encodeURIComponent("0€")}`}
+                className="w-full py-3.5 px-6 rounded-xl bg-gray-100 hover:bg-gray-200 text-[#1A3D3B] font-bold transition-colors inline-flex justify-center"
+              >
                 Démarrer maintenant
-              </button>
+              </Link>
             </div>
 
             {/* Pro Plan */}
@@ -394,9 +398,12 @@ export default function LandingPage() {
                 ))}
               </ul>
 
-              <button className="w-full py-3.5 px-6 rounded-xl bg-[#4ADE80] hover:bg-[#4ADE80]/90 text-[#1A3D3B] font-bold transition-colors shadow-lg shadow-green-500/20">
+              <Link
+                href={`/checkout?plan=${encodeURIComponent("Premium")}&price=${encodeURIComponent("5.90€")}`}
+                className="w-full py-3.5 px-6 rounded-xl bg-[#4ADE80] hover:bg-[#4ADE80]/90 text-[#1A3D3B] font-bold transition-colors shadow-lg shadow-green-500/20 inline-flex justify-center"
+              >
                 Démarrer maintenant
-              </button>
+              </Link>
             </div>
 
             {/* Enterprise Plan */}
@@ -446,9 +453,12 @@ export default function LandingPage() {
                 ))}
               </ul>
 
-              <button className="w-full py-3.5 px-6 rounded-xl bg-[#1A3D3B] hover:bg-[#162e2d] text-white font-bold transition-colors shadow-lg shadow-black/10">
-                Contactez-nous
-              </button>
+              <Link
+                href={`/checkout?plan=${encodeURIComponent("Entreprise")}&price=${encodeURIComponent("Sur devis")}`}
+                className="w-full py-3.5 px-6 rounded-xl bg-[#1A3D3B] hover:bg-[#162e2d] text-white font-bold transition-colors shadow-lg shadow-black/10 inline-flex justify-center"
+              >
+                Choisir Entreprise
+              </Link>
             </div>
           </div>
 
