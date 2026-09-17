@@ -73,12 +73,16 @@
 
       // CAS 1 : C'est le plan Premium payant -> On l'envoie vers la vraie page de paiement Stripe
       if (planName === "Premium") {
-        // Remplace ce lien par ton vrai "Stripe Payment Link" créé sur ton tableau de bord Stripe
-        const STRIPE_CHECKOUT_URL = "https://buy.stripe.com/test_bJebJ10OsgizdN15ve93y00"; 
+        // Lien de paiement Stripe (configurable via NEXT_PUBLIC_STRIPE_PAYMENT_LINK en prod)
+        const STRIPE_CHECKOUT_URL =
+          process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ||
+          "https://buy.stripe.com/test_bJebJ10OsgizdN15ve93y00"; 
         
         // Optionnel mais recommandé : Tu peux ajouter l'email de l'utilisateur dans l'URL pour Stripe
-        const urlWithEmail = `${STRIPE_CHECKOUT_URL}?prefilled_email=${encodeURIComponent(user.email)}`;
-        
+        const urlWithEmail = user.email
+          ? `${STRIPE_CHECKOUT_URL}?prefilled_email=${encodeURIComponent(user.email)}`
+          : STRIPE_CHECKOUT_URL;
+
         redirect(urlWithEmail);
       } 
       
