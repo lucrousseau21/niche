@@ -338,7 +338,7 @@ export default function LandingPage() {
               </ul>
 
               <Link
-                href={`/checkout?plan=${encodeURIComponent("Découverte")}&price=${encodeURIComponent("0€")}`}
+                href={`/paiement?plan=${encodeURIComponent("Découverte")}&price=${encodeURIComponent("0€")}`}
                 className="w-full py-3.5 px-6 rounded-xl bg-gray-100 hover:bg-gray-200 text-[#1A3D3B] font-bold transition-colors inline-flex justify-center"
               >
                 Démarrer maintenant
@@ -399,7 +399,7 @@ export default function LandingPage() {
               </ul>
 
               <Link
-                href={`/checkout?plan=${encodeURIComponent("Premium")}&price=${encodeURIComponent("5.90€")}`}
+                href={`/paiement?plan=${encodeURIComponent("Premium")}&price=${encodeURIComponent("5.90€")}`}
                 className="w-full py-3.5 px-6 rounded-xl bg-[#4ADE80] hover:bg-[#4ADE80]/90 text-[#1A3D3B] font-bold transition-colors shadow-lg shadow-green-500/20 inline-flex justify-center"
               >
                 Démarrer maintenant
@@ -454,10 +454,10 @@ export default function LandingPage() {
               </ul>
 
               <Link
-                href={`/checkout?plan=${encodeURIComponent("Entreprise")}&price=${encodeURIComponent("Sur devis")}`}
+                href="mailto:contact@niche.fr"
                 className="w-full py-3.5 px-6 rounded-xl bg-[#1A3D3B] hover:bg-[#162e2d] text-white font-bold transition-colors shadow-lg shadow-black/10 inline-flex justify-center"
               >
-                Choisir Entreprise
+                Contactez-nous
               </Link>
             </div>
           </div>
