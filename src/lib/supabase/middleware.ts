@@ -62,13 +62,14 @@ export async function updateSession(request: NextRequest) {
     }
 
     // Check if user has admin grade in profil table
-    const { data: profile } = await supabase
+    const { data: profiles } = await supabase
       .from("profil")
       .select("grade")
-      .eq("user_id", user.id) // User specifically mentioned "user_id" in the request
-      .single();
+      .eq("user_id", user.id);
 
-    if (profile?.grade !== "admin") {
+    const isAdmin = profiles?.some((p) => p.grade === "admin");
+
+    if (!isAdmin) {
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
