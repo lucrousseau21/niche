@@ -8,6 +8,8 @@ import {
   getUserMvpSubjectIds,
 } from "@/lib/profil-preferences";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const supabase = await createClient();
   const {
