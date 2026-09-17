@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { ingestAllSources } from "@/lib/ingest";
 
+export const dynamic = "force-dynamic";
+
 // This should ideally be protected by a cron secret or admin auth
 export async function POST(req: Request) {
   console.log("Starting ingestion process...");

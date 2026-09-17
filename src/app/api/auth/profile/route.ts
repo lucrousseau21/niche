@@ -2,19 +2,20 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+export const dynamic = "force-dynamic";
 
-if (!supabaseKey) {
-  console.warn(
-    "SUPABASE_SERVICE_ROLE_KEY is not set — profile creation via this API will fail."
-  );
+function getSupabase() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    return null;
+  }
+
+  return createClient(supabaseUrl, supabaseKey);
 }
-
-const supabase = createClient(
-  supabaseUrl,
-  supabaseKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 function getErrorMessage(err: unknown): string {
   if (!err) return "";
@@ -48,6 +49,14 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: "Missing required fields: id and email are required." },
         { status: 400 }
+      );
+    }
+
+    const supabase = getSupabase();
+    if (!supabase) {
+      return NextResponse.json(
+        { error: "Configuration Supabase manquante." },
+        { status: 500 }
       );
     }
 

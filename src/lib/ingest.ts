@@ -1,27 +1,24 @@
 import Parser from "rss-parser";
 import { createClient } from "@supabase/supabase-js";
 
-// Initialize Supabase Client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+function getSupabase() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-if (!supabaseKey) {
-  console.warn(
-    "WARNING: SUPABASE_SERVICE_ROLE_KEY is missing. setup/ingest might fail due to RLS."
-  );
-}
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error("Configuration Supabase manquante.");
+  }
 
-const supabase = createClient(
-  supabaseUrl,
-  supabaseKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  {
+  return createClient(supabaseUrl, supabaseKey, {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
       detectSessionInUrl: false,
     },
-  }
-);
+  });
+}
 
 const parser = new Parser();
 
@@ -39,6 +36,8 @@ export async function ingestSource(source: {
   url: string;
   sujetName: string;
 }) {
+  const supabase = getSupabase();
+
   // 1. Get Subject ID
   const { data: sujet, error: sujetError } = await supabase
     .from("sujet")

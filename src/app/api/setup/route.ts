@@ -1,26 +1,26 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+export const dynamic = "force-dynamic";
 
-if (!supabaseKey) {
-  console.warn(
-    "WARNING: SUPABASE_SERVICE_ROLE_KEY is missing. setup might fail due to RLS."
-  );
-}
+function getSupabase() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-const supabase = createClient(
-  supabaseUrl,
-  supabaseKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  {
+  if (!supabaseUrl || !supabaseKey) {
+    return null;
+  }
+
+  return createClient(supabaseUrl, supabaseKey, {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
       detectSessionInUrl: false,
     },
-  }
-);
+  });
+}
 
 const MVP_SUBJECTS = [
   {
@@ -44,6 +44,14 @@ const MVP_SUBJECTS = [
 export async function POST() {
   console.log("Starting MVP subjects setup...");
   try {
+    const supabase = getSupabase();
+    if (!supabase) {
+      return NextResponse.json(
+        { success: false, error: "Configuration Supabase manquante." },
+        { status: 500 }
+      );
+    }
+
     const results: { nom: string; id_sujet?: number; status: string }[] = [];
 
     for (const subject of MVP_SUBJECTS) {

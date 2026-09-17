@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import recaps from "../../../../supabase/mvp-recaps.json";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+export const dynamic = "force-dynamic";
 
 const MVP_SUBJECTS = [
   {
@@ -25,11 +24,14 @@ const MVP_SUBJECTS = [
 ] as const;
 
 export async function POST() {
-  if (!supabaseKey) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
     return NextResponse.json(
       {
         success: false,
-        error: "SUPABASE_SERVICE_ROLE_KEY manquante dans .env.local",
+        error: "Configuration Supabase manquante dans les variables d'environnement.",
       },
       { status: 500 }
     );
