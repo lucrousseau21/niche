@@ -76,6 +76,14 @@ export default function Header() {
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
           {user ? (
             <>
+              {(user.email === "luc.rousseaupro@gmail.com" || user.user_metadata?.grade === "admin") && (
+                <Link
+                  href="/dashboard"
+                  className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#1A3D3B]/10 text-[#1A3D3B] hover:bg-[#1A3D3B]/20 transition"
+                >
+                  Dashboard Admin
+                </Link>
+              )}
               <Link
                 href="/settings"
                 className="text-gray-500 hover:text-[#1A3D3B] transition-colors"

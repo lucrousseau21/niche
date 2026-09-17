@@ -61,13 +61,15 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    // Check if user has admin grade in profil table
+    // Check if user has admin grade in profil table or is the superadmin
     const { data: profiles } = await supabase
       .from("profil")
       .select("grade")
       .eq("user_id", user.id);
 
-    const isAdmin = profiles?.some((p) => p.grade === "admin");
+    const isAdmin =
+      profiles?.some((p) => p.grade?.toLowerCase() === "admin") ||
+      user.email === "luc.rousseaupro@gmail.com";
 
     if (!isAdmin) {
       return NextResponse.redirect(new URL("/", request.url));
