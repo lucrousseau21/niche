@@ -105,7 +105,7 @@ function DashboardHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition ${
+                className={`cursor-pointer flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition ${
                   isActive
                     ? isDark
                       ? "bg-[#22354A] text-emerald-400 shadow-sm"
@@ -133,12 +133,14 @@ function DashboardHeader() {
         >
           <button
             onClick={() => setThemePreference("auto")}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition ${
+            className={`cursor-pointer flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition ${
               themePreference === "auto"
                 ? isDark
                   ? "bg-[#22354A] text-emerald-400 font-semibold shadow-xs"
                   : "bg-white text-[#1A3D3B] font-semibold shadow-xs"
-                : "hover:text-gray-900 dark:hover:text-white"
+                : isDark
+                ? "text-slate-400 hover:text-white hover:bg-[#1E2E40]/70"
+                : "text-gray-600 hover:text-gray-900 hover:bg-black/5"
             }`}
             title="Mode automatique : suit le thème de votre appareil"
           >
@@ -148,10 +150,14 @@ function DashboardHeader() {
 
           <button
             onClick={() => setThemePreference("dark")}
-            className={`p-1.5 rounded-lg transition ${
+            className={`cursor-pointer p-1.5 rounded-lg transition ${
               themePreference === "dark"
-                ? "bg-[#22354A] text-emerald-400 shadow-xs"
-                : "hover:text-gray-900 dark:hover:text-white"
+                ? isDark
+                  ? "bg-[#22354A] text-emerald-400 shadow-xs"
+                  : "bg-gray-800 text-white shadow-xs"
+                : isDark
+                ? "text-slate-400 hover:text-white hover:bg-[#1E2E40]/70"
+                : "text-gray-600 hover:text-gray-900 hover:bg-black/5"
             }`}
             title="Forcer le mode sombre"
           >
@@ -160,10 +166,12 @@ function DashboardHeader() {
 
           <button
             onClick={() => setThemePreference("light")}
-            className={`p-1.5 rounded-lg transition ${
+            className={`cursor-pointer p-1.5 rounded-lg transition ${
               themePreference === "light"
                 ? "bg-white text-[#1A3D3B] shadow-xs"
-                : "hover:text-gray-900 dark:hover:text-white"
+                : isDark
+                ? "text-slate-400 hover:text-white hover:bg-[#1E2E40]/70"
+                : "text-gray-600 hover:text-gray-900 hover:bg-black/5"
             }`}
             title="Forcer le mode clair"
           >
