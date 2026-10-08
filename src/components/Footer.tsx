@@ -56,9 +56,9 @@ export default function Footer() {
         <div>
           <h4 className="text-[#134E4A] font-semibold mb-2">Légal</h4>
 
-          <p className="flex items-center gap-2 mt-1 text-[#6B7280]">
+          <Link href="/mention" className="flex items-center gap-2 mt-1 ">
             <Mail size={16} /> Mentions légales
-          </p>
+          </Link>
 
           <Link href="/conf" className="flex items-center gap-2 mt-1">
             <Mail size={16} /> Confidentialité
