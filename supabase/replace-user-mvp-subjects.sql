@@ -27,7 +27,7 @@ BEGIN
 
   FOREACH sid IN ARRAY p_subject_ids
   LOOP
-    IF sid IN (1, 2, 3) THEN
+    IF EXISTS (SELECT 1 FROM public.sujet WHERE id_sujet = sid) THEN
       INSERT INTO public.profil (user_id, id_sujet, grade)
       VALUES (uid, sid, COALESCE(NULLIF(trim(p_grade), ''), 'Débutant'));
     END IF;

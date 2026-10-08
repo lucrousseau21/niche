@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { filterMvpSubjectIds, MVP_SUBJECT_IDS } from "@/lib/mvp-subjects";
+import { filterMvpSubjectIds } from "@/lib/mvp-subjects";
 import type { UserSubject } from "@/types/subjects";
 
 export async function getUserMvpSubjectIds(
@@ -41,14 +41,13 @@ export async function fetchUserMvpSubjects(
   return (subjects ?? []) as UserSubject[];
 }
 
-/** Liste des niches MVP disponibles à la sélection. */
+/** Liste de toutes les niches disponibles à la sélection (synchronisée dynamiquement avec la base de données). */
 export async function fetchMvpSubjectsCatalog(
   supabase: SupabaseClient
 ): Promise<UserSubject[]> {
   const { data, error } = await supabase
     .from("sujet")
     .select("id_sujet, nom, description")
-    .in("id_sujet", [...MVP_SUBJECT_IDS])
     .order("id_sujet", { ascending: true });
 
   if (error) {
@@ -135,7 +134,10 @@ export async function saveUserMvpSubjects(
     .limit(1)
     .maybeSingle();
 
-  const gradeToUse = grade ?? existing?.grade ?? "Débutant";
+  // Conserver le grade existant de l'utilisateur, et empêcher toute promotion non autorisée vers 'admin'
+  const gradeToUse =
+    existing?.grade ??
+    (grade && grade.toLowerCase() !== "admin" ? grade : "Débutant");
 
   const { error: rpcError } = await supabase.rpc("replace_user_mvp_subjects", {
     p_subject_ids: ids,
