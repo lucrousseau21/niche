@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import React from "react";
 import Link from "next/link";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Politique de confidentialité | Niche.",
@@ -117,6 +118,7 @@ export default function PolitiqueConfidentialite() {
           </Link>
         </div>
       </main>
+      <Footer />
     </>
   );
 }
