@@ -61,14 +61,17 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    // Check if user has admin grade in profil table
-    const { data: profile } = await supabase
+    // Check if user has admin grade in profil table or is the superadmin
+    const { data: profiles } = await supabase
       .from("profil")
       .select("grade")
-      .eq("user_id", user.id) // User specifically mentioned "user_id" in the request
-      .single();
+      .eq("user_id", user.id);
 
-    if (profile?.grade !== "admin") {
+    const isAdmin =
+      profiles?.some((p) => p.grade?.toLowerCase() === "admin") ||
+      user.email === "luc.rousseaupro@gmail.com";
+
+    if (!isAdmin) {
       return NextResponse.redirect(new URL("/", request.url));
     }
   }

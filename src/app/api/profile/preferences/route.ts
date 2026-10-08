@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
   }
 
-  let body: { subjectIds?: number[]; grade?: string };
+  let body: { subjectIds?: number[] };
   try {
     body = await request.json();
   } catch {
@@ -54,11 +54,12 @@ export async function POST(request: Request) {
   const admin = createServiceRoleClient();
   const writeClient = admin ?? supabase;
 
+  // Sécurité : Ne jamais accepter le champ 'grade' provenant du client pour empêcher toute escalade de privilèges.
+  // L'utilisateur met à jour uniquement ses niches, son grade existant en base est préservé.
   const { error, savedIds } = await saveUserMvpSubjects(
     writeClient,
     user.id,
-    ids,
-    body.grade
+    ids
   );
 
   if (error) {
