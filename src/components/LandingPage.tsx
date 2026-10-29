@@ -454,7 +454,7 @@ export default function LandingPage() {
               </ul>
 
               <Link
-                href="mailto:contact.niche@gmail.com"
+                href="mailto:niche.edito@gmail.com"
                 className="w-full py-3.5 px-6 rounded-xl bg-[#1A3D3B] hover:bg-[#162e2d] text-white font-bold transition-colors shadow-lg shadow-black/10 inline-flex justify-center"
               >
                 Contactez-nous

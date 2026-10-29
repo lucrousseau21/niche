@@ -85,8 +85,8 @@ export default function PolitiqueConfidentialite() {
             exercer vos droits ou poser une question sur vos données, écrivez à :
           </p>
           <p className="text-[#134E4A] font-lato font-semibold mt-2">
-            <a className="underline" href="mailto:contact.niche@gmail.com">
-              contact.niche@gmail.com
+            <a className="underline" href="mailto:niche.edito@gmail.com">
+              niche.edito@gmail.com
             </a>
           </p>
           <p className="mt-3 text-[#2D3748] font-lato leading-relaxed">
