@@ -92,9 +92,10 @@ export default function UsersPage() {
           type: "error",
         });
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erreur de connexion";
       setUserActionFeedback({
-        message: `Erreur: ${err.message || "Erreur de connexion"}`,
+        message: `Erreur: ${message}`,
         type: "error",
       });
     } finally {

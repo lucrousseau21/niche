@@ -29,7 +29,7 @@ interface SubjectData {
     id_recap: number;
     titre: string;
     created_at: string;
-    resume?: any;
+    resume?: unknown;
   }>;
 }
 
@@ -54,7 +54,7 @@ export default function DashboardOverviewPage() {
 
         if (usersData.success && usersData.users) {
           const total = usersData.users.length;
-          const admins = usersData.users.filter((u: any) => u.isAdmin).length;
+          const admins = usersData.users.filter((u: { isAdmin?: boolean }) => u.isAdmin).length;
           setUserStats({
             total,
             admins,

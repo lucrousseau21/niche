@@ -345,8 +345,9 @@ export default function OnboardingPage() {
         } else {
           router.push("/");
         }
-      } catch (err: any) {
-        alert(`Erreur inattendue : ${err.message || err}`);
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        alert(`Erreur inattendue : ${message}`);
       } finally {
         setIsSubmitting(false);
       }

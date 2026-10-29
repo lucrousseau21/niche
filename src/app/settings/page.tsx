@@ -75,7 +75,7 @@ export default async function SettingsPage() {
             {/* NOUVELLE SECTION : Gérer l'abonnement */}
             <div className="pt-8 border-t border-gray-100">
               <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
-                Gestion de l'abonnement
+                Gestion de l&apos;abonnement
               </h2>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl border border-[#E6F4EA] bg-[#F2FBF4]">
                 <div>

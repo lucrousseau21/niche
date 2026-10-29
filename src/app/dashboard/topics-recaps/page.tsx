@@ -21,7 +21,7 @@ interface SubjectRecap {
   id_recap: number;
   id_sujet: number;
   titre: string;
-  resume: any;
+  resume: unknown;
   contenu: string;
   created_at: string;
 }
@@ -121,8 +121,9 @@ export default function TopicsRecapsPage() {
       } else {
         setCreateSubjectError(data.error || "Impossible de créer la niche.");
       }
-    } catch (err: any) {
-      setCreateSubjectError(err.message || "Erreur de connexion.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erreur de connexion.";
+      setCreateSubjectError(message);
     } finally {
       setCreatingSubject(false);
     }
@@ -178,8 +179,9 @@ export default function TopicsRecapsPage() {
       } else {
         setCreateRecapError(data.error || "Impossible d'enregistrer la newsletter.");
       }
-    } catch (err: any) {
-      setCreateRecapError(err.message || "Erreur de connexion.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erreur de connexion.";
+      setCreateRecapError(message);
     } finally {
       setCreatingRecap(false);
     }

@@ -21,17 +21,23 @@ export function DashboardThemeProvider({ children }: { children: React.ReactNode
   const [systemIsDark, setSystemIsDark] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("niche_dashboard_theme") as ThemePreference | null;
-    if (saved && (saved === "auto" || saved === "dark" || saved === "light")) {
-      setThemePreferenceState(saved);
-    }
-
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    setSystemIsDark(mediaQuery.matches);
 
     const listener = (e: MediaQueryListEvent) => setSystemIsDark(e.matches);
     mediaQuery.addEventListener("change", listener);
-    return () => mediaQuery.removeEventListener("change", listener);
+
+    const timer = setTimeout(() => {
+      const saved = localStorage.getItem("niche_dashboard_theme") as ThemePreference | null;
+      if (saved && (saved === "auto" || saved === "dark" || saved === "light")) {
+        setThemePreferenceState(saved);
+      }
+      setSystemIsDark(mediaQuery.matches);
+    }, 0);
+
+    return () => {
+      clearTimeout(timer);
+      mediaQuery.removeEventListener("change", listener);
+    };
   }, []);
 
   const setThemePreference = (pref: ThemePreference) => {

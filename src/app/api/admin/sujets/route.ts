@@ -66,9 +66,10 @@ export async function GET() {
     }));
 
     return NextResponse.json({ success: true, subjects: sujetsWithRecaps });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Erreur API Admin Sujets:", error);
-    return NextResponse.json({ error: error.message || "Erreur serveur" }, { status: 500 });
+    const message = error instanceof Error ? error.message : "Erreur serveur";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -161,10 +162,11 @@ export async function POST(request: Request) {
         recaps: [],
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Erreur API Admin Create Sujet:", error);
+    const message = error instanceof Error ? error.message : "Erreur interne du serveur";
     return NextResponse.json(
-      { error: error.message || "Erreur interne du serveur" },
+      { error: message },
       { status: 500 }
     );
   }

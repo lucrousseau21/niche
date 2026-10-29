@@ -13,8 +13,8 @@ export default function IngestionPage() {
   const { isDark } = useDashboardTheme();
 
   const [subjects, setSubjects] = useState<SubjectOption[]>([]);
-  const [ingestTopic, setIngestTopic] = useState<string>(" ");
-  const [ingestResult] = useState<any>(null);
+  const [ingestTopic, setIngestTopic] = useState<string>("");
+  const [ingestResult] = useState<unknown>(null);
 
   useEffect(() => {
     const fetchSubjects = async () => {
