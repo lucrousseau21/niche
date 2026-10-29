@@ -80,8 +80,8 @@ export default function Footer() {
 
       <div className="text-center flex justify-center items-center gap-2 mt-2">
         <Mail size={14} />
-        <a href="mailto:contact@niche.fr" className="underline">
-          contact@niche.fr
+        <a href="mailto:niche.edito@gmail.com" className="underline">
+          niche.edito@gmail.com
         </a>
       </div>
     </footer>
