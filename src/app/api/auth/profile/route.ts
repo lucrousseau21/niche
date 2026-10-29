@@ -23,7 +23,7 @@ function getErrorMessage(err: unknown): string {
   if (err instanceof Error) return err.message;
   try {
     // Try to read a message property if present
-    const maybeMsg = (err as any)?.message;
+    const maybeMsg = (err as { message?: unknown })?.message;
     if (typeof maybeMsg === "string") return maybeMsg;
   } catch {
     // ignore
@@ -77,7 +77,7 @@ export async function POST(request: Request) {
       // If error complains about column 'full_name', try with 'nom'
       if (isMissingColumnError(err1, "full_name")) {
         try {
-          const payload2: Record<string, any> = { id, email };
+          const payload2: Record<string, unknown> = { id, email };
           if (full_name) payload2["nom"] = full_name;
 
           const { data: data2, error: error2 } = await supabase

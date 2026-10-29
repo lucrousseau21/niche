@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -21,7 +21,7 @@ interface SubjectRecap {
   id_recap: number;
   id_sujet: number;
   titre: string;
-  resume: any;
+  resume: string | Record<string, unknown> | null;
   contenu: string;
   created_at: string;
 }
@@ -61,27 +61,27 @@ export default function TopicsRecapsPage() {
   const [creatingRecap, setCreatingRecap] = useState(false);
   const [createRecapError, setCreateRecapError] = useState<string | null>(null);
 
-  const fetchSubjects = async () => {
+  const fetchSubjects = useCallback(async () => {
     setSubjectsLoading(true);
     try {
       const res = await fetch("/api/admin/sujets");
       const data = await res.json();
       if (data.success && data.subjects) {
         setSubjects(data.subjects);
-        if (data.subjects.length > 0 && selectedSubjectId === null) {
-          setSelectedSubjectId(data.subjects[0].id_sujet);
-        }
+        setSelectedSubjectId((prev) =>
+          prev === null && data.subjects.length > 0 ? data.subjects[0].id_sujet : prev
+        );
       }
     } catch (err) {
       console.error("Erreur réseau sujets:", err);
     } finally {
       setSubjectsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchSubjects();
-  }, []);
+  }, [fetchSubjects]);
 
   const handleCreateSubject = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,8 +121,9 @@ export default function TopicsRecapsPage() {
       } else {
         setCreateSubjectError(data.error || "Impossible de créer la niche.");
       }
-    } catch (err: any) {
-      setCreateSubjectError(err.message || "Erreur de connexion.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erreur de connexion.";
+      setCreateSubjectError(message);
     } finally {
       setCreatingSubject(false);
     }
@@ -178,8 +179,9 @@ export default function TopicsRecapsPage() {
       } else {
         setCreateRecapError(data.error || "Impossible d'enregistrer la newsletter.");
       }
-    } catch (err: any) {
-      setCreateRecapError(err.message || "Erreur de connexion.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erreur de connexion.";
+      setCreateRecapError(message);
     } finally {
       setCreatingRecap(false);
     }
@@ -251,7 +253,7 @@ export default function TopicsRecapsPage() {
               isDark ? "text-slate-400" : "text-gray-500"
             }`}
           >
-            Explorez les sujets configurés et consultez l'historique de toutes les newsletters associées.
+            Explorez les sujets configurés et consultez l&apos;historique de toutes les newsletters associées.
           </p>
         </div>
 
@@ -570,17 +572,17 @@ export default function TopicsRecapsPage() {
                         </h4>
 
                         {/* Aperçu du résumé */}
-                        {recap.resume && (
+                        {recap.resume ? (
                           <div
                             className={`text-xs line-clamp-2 ${
                               isDark ? "text-slate-300" : "text-gray-600"
                             }`}
                           >
-                            {typeof recap.resume === "object"
-                              ? Object.values(recap.resume).join(" • ")
+                            {typeof recap.resume === "object" && recap.resume !== null
+                              ? Object.values(recap.resume).map(String).join(" • ")
                               : String(recap.resume)}
                           </div>
-                        )}
+                        ) : null}
                       </div>
 
                       {/* Actions sur le récap */}

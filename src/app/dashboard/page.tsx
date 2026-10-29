@@ -29,7 +29,7 @@ interface SubjectData {
     id_recap: number;
     titre: string;
     created_at: string;
-    resume?: any;
+    resume?: unknown;
   }>;
 }
 
@@ -54,7 +54,7 @@ export default function DashboardOverviewPage() {
 
         if (usersData.success && usersData.users) {
           const total = usersData.users.length;
-          const admins = usersData.users.filter((u: any) => u.isAdmin).length;
+          const admins = usersData.users.filter((u: { isAdmin?: boolean }) => u.isAdmin).length;
           setUserStats({
             total,
             admins,
@@ -133,7 +133,7 @@ export default function DashboardOverviewPage() {
               isDark ? "text-white" : "text-[#1A3D3B]"
             }`}
           >
-            Vue d'ensemble de la plateforme Niche
+            Vue d&apos;ensemble de la plateforme Niche
           </h1>
         </div>
 
@@ -503,7 +503,7 @@ export default function DashboardOverviewPage() {
               </h4>
             </div>
             <p className="text-[11px] leading-relaxed opacity-90">
-              Statistiques de lecture par niche, scores d'impact IA et fréquences de publication automatiques.
+              Statistiques de lecture par niche, scores d&apos;impact IA et fréquences de publication automatiques.
             </p>
           </div>
         </div>

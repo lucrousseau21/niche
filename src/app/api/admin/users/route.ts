@@ -95,9 +95,10 @@ export async function GET() {
     users.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
     return NextResponse.json({ success: true, users });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Erreur API Admin Users:", error);
-    return NextResponse.json({ error: error.message || "Erreur serveur" }, { status: 500 });
+    const message = error instanceof Error ? error.message : "Erreur serveur";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -166,8 +167,9 @@ export async function PATCH(request: Request) {
       grade: targetGrade,
       isAdmin: makeAdmin,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Erreur lors de la mise à jour du grade:", error);
-    return NextResponse.json({ error: error.message || "Erreur serveur" }, { status: 500 });
+    const message = error instanceof Error ? error.message : "Erreur serveur";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

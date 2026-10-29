@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function FeatureCard({
   title,
   desc,
@@ -36,12 +38,12 @@ export default function FeatureCard({
 
   if (slug) {
     return (
-      <a
+      <Link
         href={`/blog/${slug}`}
         className="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg hover:-translate-y-1 hover:border-green-200 transition-all duration-300 h-full flex flex-col items-start gap-4 cursor-pointer"
       >
         {inner}
-      </a>
+      </Link>
     );
   }
 

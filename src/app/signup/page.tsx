@@ -78,7 +78,7 @@ export default function Signup() {
       // Fallback: If no session but user exists, try explicit sign in
       // This handles cases where auto-login might be skipped or behaves differently
       if (data.user) {
-        const { data: signInData, error: signInError } =
+        const { data: signInData } =
           await supabase.auth.signInWithPassword({
             email,
             password,
@@ -95,7 +95,7 @@ export default function Signup() {
         type: "success",
         text: "Compte créé ! Si vous avez activé la confirmation par email, veuillez vérifier votre boîte de réception.",
       });
-    } catch (err: any) {
+    } catch {
       setMessage({
         type: "error",
         text: "Une erreur est survenue lors de l'inscription.",

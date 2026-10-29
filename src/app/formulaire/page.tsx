@@ -285,11 +285,6 @@ export default function OnboardingPage() {
 
       setAvailableNiches(items);
       setIsLoadingNiches(false);
-
-      // Auto-select first if needed, though simpler to let user choose
-      if (items.length > 0 && selectedNicheIds.length === 0) {
-        // setSelectedNicheIds([items[0].id]);
-      }
     };
 
     fetchNiches();
@@ -327,8 +322,6 @@ export default function OnboardingPage() {
           return;
         }
 
-        const user = session.user;
-
         // 2. Prepare inserts for 'profil' table
         // We need one entry per selected subject
         if (selectedNicheIds.length === 0) {
@@ -352,8 +345,9 @@ export default function OnboardingPage() {
         } else {
           router.push("/");
         }
-      } catch (err: any) {
-        alert(`Erreur inattendue : ${err.message || err}`);
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        alert(`Erreur inattendue : ${message}`);
       } finally {
         setIsSubmitting(false);
       }

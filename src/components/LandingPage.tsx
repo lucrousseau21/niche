@@ -534,7 +534,7 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-col items-center gap-4 mb-16">
-            <a
+            <Link
               href="/signup"
               className="w-full sm:w-auto bg-[#4ADE80] hover:bg-[#4ADE80]/90 text-[#1A3D3B] text-lg font-bold py-4 px-10 rounded-2xl transition-all transform hover:-translate-y-1 shadow-lg shadow-green-500/20 flex items-center justify-center gap-2"
             >
@@ -551,7 +551,7 @@ export default function LandingPage() {
               >
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
-            </a>
+            </Link>
             <span className="text-sm text-green-200/60">
               Aucune carte bancaire requise
             </span>

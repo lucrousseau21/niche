@@ -31,9 +31,9 @@ export default function CGU() {
             1. Présentation du Service
           </h2>
           <p className="mt-3 text-[#2D3748] font-lato leading-relaxed">
-            Niche. est un service de veille stratégique automatisée édité par Niche&Co.,
-            ci-après désigné "l'Éditeur". Le service propose l'envoi de newsletters
-            thématiques et l'accès à une application de consultation de contenus, basés
+            Niche. est un service de veille stratégique automatisée édité par Niche&amp;Co.,
+            ci-après désigné &quot;l&apos;Éditeur&quot;. Le service propose l&apos;envoi de newsletters
+            thématiques et l&apos;accès à une application de consultation de contenus, basés
             sur une curation assistée par Intelligence Artificielle.
           </p>
         </section>
@@ -44,9 +44,9 @@ export default function CGU() {
             2. Accès au Service
           </h2>
           <p className="mt-3 text-[#2D3748] font-lato leading-relaxed">
-            L'accès au service Niche. est réservé aux utilisateurs ayant souscrit un
-            abonnement valide ou bénéficiant d'une période d'essai gratuite. L'utilisateur
-            s'engage à fournir des informations sincères lors de son inscription
+            L&apos;accès au service Niche. est réservé aux utilisateurs ayant souscrit un
+            abonnement valide ou bénéficiant d&apos;une période d&apos;essai gratuite. L&apos;utilisateur
+            s&apos;engage à fournir des informations sincères lors de son inscription
             (notamment une adresse email valide) afin de garantir la bonne réception des
             contenus.
           </p>
@@ -58,12 +58,12 @@ export default function CGU() {
             3. Propriété Intellectuelle
           </h2>
           <p className="mt-3 text-[#2D3748] font-lato leading-relaxed">
-            L'ensemble des contenus envoyés par Niche. (synthèses, analyses, mises en page,
+            L&apos;ensemble des contenus envoyés par Niche. (synthèses, analyses, mises en page,
             graphiques) est protégé par le droit de la propriété intellectuelle.
             <br />
-            <span className="font-semibold">Usage strictement personnel :</span> L'abonnement est nominatif. Le transfert,
+            <span className="font-semibold">Usage strictement personnel :</span> L&apos;abonnement est nominatif. Le transfert,
             la revente ou la rediffusion publique des newsletters (forward massif) est
-            strictement interdit sans l'accord de l'Éditeur.
+            strictement interdit sans l&apos;accord de l&apos;Éditeur.
           </p>
         </section>
 
@@ -73,16 +73,16 @@ export default function CGU() {
             4. Limitation de Responsabilité
           </h2>
           <p className="mt-3 text-[#2D3748] font-lato leading-relaxed">
-            <span className="font-semibold">Nature de l'information :</span> Les contenus fournis par Niche. sont des
+            <span className="font-semibold">Nature de l&apos;information :</span> Les contenus fournis par Niche. sont des
             synthèses informatives. Ils ne constituent en aucun cas un conseil en
-            investissement, un conseil juridique ou une incitation à l'achat, notamment
+            investissement, un conseil juridique ou une incitation à l&apos;achat, notamment
             pour les thématiques Finance, Crypto ou Droit.
             <br /><br />
             <span className="font-semibold">Absence de garantie :</span> Malgré nos efforts pour vérifier la fiabilité des
-            sources (notamment via un processus de validation humaine), l'Éditeur ne
-            saurait être tenu responsable des erreurs, omissions ou "hallucinations"
-            générées par les outils d'IA, ni des conséquences de l'utilisation de ces
-            informations par l'abonné.
+            sources (notamment via un processus de validation humaine), l&apos;Éditeur ne
+            saurait être tenu responsable des erreurs, omissions ou &quot;hallucinations&quot;
+            générées par les outils d&apos;IA, ni des conséquences de l&apos;utilisation de ces
+            informations par l&apos;abonné.
           </p>
         </section>
 
@@ -95,9 +95,9 @@ export default function CGU() {
             Les abonnements sont souscrits pour une durée déterminée (mensuelle ou
             annuelle) avec reconduction tacite.
             <br />
-            <span className="font-semibold">Résiliation :</span> L'utilisateur peut résilier son abonnement à tout moment
+            <span className="font-semibold">Résiliation :</span> L&apos;utilisateur peut résilier son abonnement à tout moment
             depuis son espace compte. La résiliation prend effet à la fin de la période
-            de facturation en cours. Aucun remboursement au prorata n'est effectué pour
+            de facturation en cours. Aucun remboursement au prorata n&apos;est effectué pour
             une période déjà entamée.
           </p>
         </section>
@@ -108,7 +108,7 @@ export default function CGU() {
             6. Modification des CGU
           </h2>
           <p className="mt-3 text-[#2D3748] font-lato leading-relaxed">
-            L'Éditeur se réserve le droit de modifier les présentes conditions à tout
+            L&apos;Éditeur se réserve le droit de modifier les présentes conditions à tout
             moment. Les utilisateurs seront informés des mises à jour majeures par email.
           </p>
         </section>
@@ -119,7 +119,7 @@ export default function CGU() {
             href="/"
             className="btn-primary px-6 py-3 rounded-md text-white bg-[#134E4A] hover:bg-[#0f3a36] text-center"
           >
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </Link>
           <Link
             href="/conf"
