@@ -20,7 +20,7 @@ export default function PolitiqueConfidentialite() {
           Politique de Confidentialité – Niche.
         </h1>
         <p className="text-sm text-[#2D3748] opacity-70 mt-1">
-          Dernière mise à jour : 11 décembre 2025
+          Dernière mise à jour : 29 octobre 2026
         </p>
 
         {/* Bloc 1 */}
@@ -29,13 +29,13 @@ export default function PolitiqueConfidentialite() {
             1. Les données que nous collectons
           </h2>
           <p className="mt-3 text-[#2D3748] font-lato leading-relaxed">
-            Pour faire fonctionner notre algorithme de personnalisation ("Deep Filtering"),
+            Pour faire fonctionner notre algorithme de personnalisation (&quot;Deep Filtering&quot;),
             nous collectons les informations suivantes :
           </p>
           <ul className="mt-3 text-[#2D3748] font-lato list-disc ml-6 leading-relaxed">
-            <li><span className="font-semibold">Données d'identité :</span> Adresse email (obligatoire), Nom/Prénom (facultatif).</li>
-            <li><span className="font-semibold">Données de préférences :</span> Thématiques suivies, niveau d'expertise (Débutant/Expert).</li>
-            <li><span className="font-semibold">Données d'usage :</span> Taux d'ouverture, clics, temps de lecture pour améliorer la pertinence du contenu.</li>
+            <li><span className="font-semibold">Données d&apos;identité :</span> Adresse email (obligatoire), Nom/Prénom (facultatif).</li>
+            <li><span className="font-semibold">Données de préférences :</span> Thématiques suivies et niveau d&apos;expertise.</li>
+            <li><span className="font-semibold">Données de paiement :</span> informations de suivi d’abonnement et de transaction traitées par Stripe ; Niche ne reçoit pas les numéros complets de carte bancaire.</li>
           </ul>
         </section>
 
@@ -50,7 +50,7 @@ export default function PolitiqueConfidentialite() {
           <ul className="mt-3 text-[#2D3748] font-lato list-disc ml-6 leading-relaxed">
             <li>Vous envoyer votre newsletter personnalisée.</li>
             <li>Gérer votre abonnement et vos paiements (via notre prestataire Stripe).</li>
-            <li>Améliorer nos algorithmes grâce à l'analyse anonymisée des tendances de lecture.</li>
+            <li>Assurer la sécurité, le fonctionnement et l’amélioration du service.</li>
           </ul>
           <p className="mt-3 text-[#2D3748] font-lato leading-relaxed font-semibold">
             Nous ne revendons jamais vos données personnelles à des tiers.
@@ -66,9 +66,8 @@ export default function PolitiqueConfidentialite() {
             Certaines données peuvent être partagées avec des prestataires indispensables :
           </p>
           <ul className="mt-3 text-[#2D3748] font-lato list-disc ml-6 leading-relaxed">
-            <li><span className="font-semibold">Paiement :</span> Stripe (aucune donnée bancaire ne transite sur nos serveurs).</li>
-            <li><span className="font-semibold">Envoi d’emails :</span> Prestataire email (ex : Brevo, Mailgun).</li>
-            <li><span className="font-semibold">Hébergement :</span> Plateforme d’hébergement (ex : AWS, Vercel).</li>
+            <li><span className="font-semibold">Paiement :</span> Stripe, pour la gestion des paiements. Les coordonnées bancaires sont saisies dans les composants de paiement Stripe.</li>
+            <li><span className="font-semibold">Hébergement et données de compte :</span> Vercel et Supabase, selon les services utilisés.</li>
           </ul>
         </section>
 
@@ -78,27 +77,45 @@ export default function PolitiqueConfidentialite() {
             4. Vos droits (RGPD)
           </h2>
           <p className="mt-3 text-[#2D3748] font-lato leading-relaxed">
-            Conformément au RGPD, vous disposez d’un droit d’accès, de rectification et de
-            suppression de vos données. Pour exercer ce droit, contactez-nous à :
+            Conformément au RGPD, vous disposez notamment de droits d’accès, de
+            rectification, d’effacement, de limitation, d’opposition et de
+            portabilité lorsque les conditions légales sont réunies. Pour
+            exercer vos droits ou poser une question sur vos données, écrivez à :
           </p>
           <p className="text-[#134E4A] font-lato font-semibold mt-2">
-            [Votre Email de Contact]
+            <a className="underline" href="mailto:contact.niche@gmail.com">
+              contact.niche@gmail.com
+            </a>
           </p>
           <p className="mt-3 text-[#2D3748] font-lato leading-relaxed">
-            Un lien de désinscription est également présent au bas de chaque email envoyé.
+            Vous pouvez également introduire une réclamation auprès de la CNIL.
+            Nous répondrons dans les délais prévus par le RGPD.
+          </p>
+          <p className="mt-3 text-[#2D3748] font-lato leading-relaxed">
+            Vous pouvez également vous opposer à l’envoi de communications
+            facultatives en utilisant le moyen de désinscription indiqué dans
+            le message concerné.
           </p>
         </section>
 
         {/* Bloc 5 */}
-        <section className="mt-6 border border-[#E5E7EB] rounded-xl p-6 bg-white shadow-sm">
+        <section id="cookies" className="mt-6 border border-[#E5E7EB] rounded-xl p-6 bg-white shadow-sm">
           <h2 className="text-xl font-semibold text-[#134E4A] font-montserrat">
             5. Cookies
           </h2>
           <p className="mt-3 text-[#2D3748] font-lato leading-relaxed">
-            Nous utilisons des cookies strictement nécessaires au fonctionnement du site
-            (session utilisateur) ainsi que des cookies de mesure d’audience anonymes
-            permettant de comprendre l’utilisation du service. Vous pouvez gérer vos
-            préférences via le bandeau cookies lors de votre première visite.
+            Les cookies et traceurs nécessaires à la connexion et à la sécurité
+            sont utilisés pour fournir le service. Le script Google Analytics
+            n’est chargé qu’après votre accord explicite
+            pour la mesure d’audience. Vous pouvez refuser ces traceurs ou modifier
+            votre choix à tout moment             avec le lien &laquo; Gérer les cookies &raquo; en bas de
+            chaque page. Le refus n’empêche pas l’utilisation du service.
+          </p>
+          <p className="mt-3 text-[#2D3748] font-lato leading-relaxed">
+            Le détail des durées de conservation, des bases légales et des
+            éventuels transferts hors de l’Espace économique européen doit être
+            confirmé selon les paramétrages effectivement utilisés par Niche et
+            ses prestataires.
           </p>
         </section>
 
@@ -108,13 +125,13 @@ export default function PolitiqueConfidentialite() {
             href="/"
             className="btn-primary px-6 py-3 rounded-md text-white bg-[#134E4A] hover:bg-[#0f3a36] text-center"
           >
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </Link>
           <Link
             href="/CGU"
             className="btn-mint px-6 py-3 rounded-md text-white bg-[#10B981] hover:bg-[#0f9b6f] text-center"
           >
-            Conditions Générales d'Utilisation
+            Conditions Générales d&apos;Utilisation
           </Link>
         </div>
       </main>

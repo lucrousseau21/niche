@@ -27,6 +27,7 @@ const NicheCard: React.FC<{
   <button
     type="button"
     onClick={onSelect}
+    aria-pressed={isSelected}
     className={`
       relative p-4 rounded-xl flex flex-col items-center justify-center space-y-2 text-center 
       transition-all duration-200 w-full min-h-[100px] border
@@ -202,6 +203,8 @@ export default function SettingsNicheSelector() {
                 ? "bg-green-50 text-green-700"
                 : "bg-red-50 text-red-700"
             }`}
+            role={message.type === "error" ? "alert" : "status"}
+            aria-live="polite"
           >
             {message.text}
           </div>

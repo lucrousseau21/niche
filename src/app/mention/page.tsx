@@ -287,9 +287,9 @@ export default function MentionsLegales() {
           </p>
           <p className={paragraphClass}>
             Le site utilise des cookies nécessaires à son fonctionnement et,
-            sous réserve du consentement de l&apos;utilisateur, des cookies de
-            mesure d&apos;audience déposés via Google Tag Manager. Les choix
-            peuvent être modifiés à tout moment depuis le bandeau cookies.
+            uniquement après consentement, des traceurs Google Analytics de
+            mesure d&apos;audience. Les choix peuvent être modifiés à tout moment
+            avec le lien « Gérer les cookies » en bas de page.
           </p>
         </section>
 

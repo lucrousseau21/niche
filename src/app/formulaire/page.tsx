@@ -51,7 +51,9 @@ const NicheCard: React.FC<{
   onSelect: () => void;
 }> = ({ niche, icon, isSelected, onSelect }) => (
   <button
+    type="button"
     onClick={onSelect}
+    aria-pressed={isSelected}
     className={`
       relative p-4 rounded-xl flex flex-col items-center justify-center space-y-2 text-center 
       transition-all duration-200 w-full min-h-[100px]
@@ -100,12 +102,12 @@ const NicheSelector: React.FC<NicheSelectorProps> = ({
         </p>
 
         {isLoading && (
-          <div className="text-center text-gray-500">
+          <div className="text-center text-gray-500" role="status" aria-live="polite">
             Chargement des niches...
           </div>
         )}
         {error && (
-          <div className="text-center text-red-500">
+          <div className="text-center text-red-700" role="alert">
             Erreur de chargement: {error}
           </div>
         )}
@@ -138,7 +140,7 @@ const NicheSelector: React.FC<NicheSelectorProps> = ({
             w-full py-3 rounded-xl text-lg font-semibold transition-colors duration-200
             ${
               isDisabled
-                ? "bg-gray-400 text-gray-600 cursor-not-allowed"
+                ? "bg-gray-400 text-gray-900 cursor-not-allowed"
                 : "bg-[#66BB6A] text-white hover:bg-[#4CAF50] shadow-lg"
             }
           `}
@@ -168,7 +170,9 @@ const LevelCard: React.FC<{
   onSelect: () => void;
 }> = ({ level, description, isSelected, onSelect }) => (
   <button
+    type="button"
     onClick={onSelect}
+    aria-pressed={isSelected}
     className={`
         p-4 rounded-xl text-left w-full transition-all duration-200 border
         ${
@@ -237,7 +241,7 @@ const LevelSelector: React.FC<LevelSelectorProps> = ({
             w-full py-3 rounded-xl text-lg font-semibold transition-colors duration-200
             ${
               isDisabled
-                ? "bg-gray-400 text-gray-600 cursor-not-allowed"
+                ? "bg-gray-400 text-gray-900 cursor-not-allowed"
                 : "bg-[#66BB6A] text-white hover:bg-[#4CAF50] shadow-lg"
             }
           `}
@@ -286,10 +290,6 @@ export default function OnboardingPage() {
       setAvailableNiches(items);
       setIsLoadingNiches(false);
 
-      // Auto-select first if needed, though simpler to let user choose
-      if (items.length > 0 && selectedNicheIds.length === 0) {
-        // setSelectedNicheIds([items[0].id]);
-      }
     };
 
     fetchNiches();
@@ -327,8 +327,6 @@ export default function OnboardingPage() {
           return;
         }
 
-        const user = session.user;
-
         // 2. Prepare inserts for 'profil' table
         // We need one entry per selected subject
         if (selectedNicheIds.length === 0) {
@@ -352,8 +350,10 @@ export default function OnboardingPage() {
         } else {
           router.push("/");
         }
-      } catch (err: any) {
-        alert(`Erreur inattendue : ${err.message || err}`);
+      } catch (err: unknown) {
+        const message =
+          err instanceof Error ? err.message : "Erreur inattendue.";
+        alert(`Erreur inattendue : ${message}`);
       } finally {
         setIsSubmitting(false);
       }

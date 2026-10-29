@@ -46,6 +46,11 @@ body {
   line-height: 1.5;
 }
 
+:focus-visible {
+  outline: 3px solid #0f766e;
+  outline-offset: 3px;
+}
+
 /* Named fonts */
 .logo-font {
   font-family: "Outfit", system-ui, -apple-system, sans-serif;

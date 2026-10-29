@@ -2,13 +2,16 @@
 
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { User } from "@supabase/supabase-js";
 
 export default function Header() {
   const [user, setUser] = useState<User | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const closeMenuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuPanelRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
   const router = useRouter();
 
@@ -32,6 +35,41 @@ export default function Header() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isMenuOpen) return;
+
+    closeMenuButtonRef.current?.focus();
+    const menuButton = menuButtonRef.current;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMenuOpen(false);
+        return;
+      }
+
+      if (event.key !== "Tab" || !menuPanelRef.current) return;
+      const focusable = menuPanelRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!first || !last) return;
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      menuButton?.focus();
+    };
+  }, [isMenuOpen]);
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     router.refresh();
@@ -52,9 +90,13 @@ export default function Header() {
 
         {/* Mobile Hamburger */}
         <button
+          ref={menuButtonRef}
+          type="button"
           className="md:hidden p-2 -mr-2 text-[#1A3D3B]"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Menu"
+          aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+          aria-expanded={isMenuOpen}
+          aria-controls={isMenuOpen ? "mobile-navigation" : undefined}
         >
           <svg
             width="32"
@@ -135,9 +177,24 @@ export default function Header() {
             ></div>
 
             {/* Drawer */}
-            <div className="relative w-[300px] h-full bg-[#1A3D3B] flex flex-col shadow-2xl animate-in slide-in-from-right duration-300">
+            <div
+              ref={menuPanelRef}
+              id="mobile-navigation"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Menu de navigation"
+              className="relative w-[300px] h-full bg-[#1A3D3B] flex flex-col shadow-2xl animate-in slide-in-from-right duration-300"
+            >
               {/* Drawer Header */}
               <div className="p-8 pb-6">
+                <button
+                  ref={closeMenuButtonRef}
+                  type="button"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="mb-4 min-h-11 rounded-lg px-3 text-white underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                >
+                  Fermer le menu
+                </button>
                 <div className="mb-6 relative">
                   <img
                     src="/NICHE_LOGO.png"

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
-import { Mail, Instagram, Facebook } from "lucide-react";
+import { Mail } from "lucide-react";
+import { CookiePreferencesButton } from "@/components/CookieConsent";
 
 export default function Footer() {
   return (
@@ -16,7 +17,7 @@ export default function Footer() {
         <p className="text-sm opacity-70 mb-4">L’expertise. Point.</p>
 
         <div className="text-sm text-[#4B5563] mb-8">
-          Contactez-nous : <a href="mailto:contact@niche.fr" className="underline">contact@niche.fr</a>
+          Contactez-nous : <a href="mailto:contact.niche@gmail.com" className="underline">contact.niche@gmail.com</a>
         </div>
       </div>
 
@@ -80,9 +81,12 @@ export default function Footer() {
 
       <div className="text-center flex justify-center items-center gap-2 mt-2">
         <Mail size={14} />
-        <a href="mailto:niche.edito@gmail.com" className="underline">
-          niche.edito@gmail.com
+        <a href="mailto:contact.niche@gmail.com" className="underline">
+          contact.niche@gmail.com
         </a>
+      </div>
+      <div className="text-center">
+        <CookiePreferencesButton />
       </div>
     </footer>
   );

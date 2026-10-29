@@ -113,33 +113,43 @@ export default function Login() {
         <div className="bg-white rounded-[2rem] p-8 shadow-2xl">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 ml-1 body-font">
+              <label htmlFor="loginEmail" className="text-sm font-medium text-gray-700 ml-1 body-font">
                 Adresse email
               </label>
               <input
+                id="loginEmail"
+                name="email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="exemple@email.com"
                 type="email"
+                required
                 className="w-full px-5 py-3 rounded-2xl bg-gray-50 border border-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-mint)] focus:bg-white transition-all body-font text-gray-800"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 ml-1 body-font">
+              <label htmlFor="loginPassword" className="text-sm font-medium text-gray-700 ml-1 body-font">
                 Mot de passe
               </label>
               <div className="relative">
                 <input
+                  id="loginPassword"
+                  name="password"
+                  autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Votre mot de passe"
                   type={showPassword ? "text" : "password"}
+                  required
                   className="w-full px-5 py-3 rounded-2xl bg-gray-50 border border-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-mint)] focus:bg-white transition-all body-font text-gray-800"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                  aria-pressed={showPassword}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
                 >
                   {showPassword ? (
@@ -184,6 +194,8 @@ export default function Login() {
                     ? "bg-red-50 text-red-600"
                     : "bg-green-50 text-green-700"
                 }`}
+                role={message.type === "error" ? "alert" : "status"}
+                aria-live="polite"
               >
                 {message.text}
               </div>
