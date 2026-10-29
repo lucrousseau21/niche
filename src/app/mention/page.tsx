@@ -36,9 +36,9 @@ export default function MentionsLegales() {
             Niche., accessible à l&apos;adresse{" "}
             <a
               className="text-[#134E4A] underline"
-              href="https://niche.fr"
+              href="https://niche-prod.vercel.app/"
             >
-              https://niche.fr
+              https://niche-prod.vercel.app/
             </a>
             , et de ses services associés (application web, newsletters,
             synthèses audio) sont informés de l&apos;identité des différents
@@ -60,12 +60,6 @@ export default function MentionsLegales() {
             <dd>
               <a className="text-[#134E4A] underline" href="mailto:contact.niche@gmail.com">
                 contact.niche@gmail.com
-              </a>
-            </dd>
-            <dt className="font-semibold">Téléphone</dt>
-            <dd>
-              <a className="text-[#134E4A] underline" href="tel:+33601020304">
-                +33 6 01 02 03 04
               </a>
             </dd>
           </dl>
