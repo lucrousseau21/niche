@@ -36,9 +36,9 @@ export default function MentionsLegales() {
             Niche., accessible à l&apos;adresse{" "}
             <a
               className="text-[#134E4A] underline"
-              href="https://niche.fr"
+              href="https://niche-prod.vercel.app/"
             >
-              https://niche.fr
+              https://niche-prod.vercel.app/
             </a>
             , et de ses services associés (application web, newsletters,
             synthèses audio) sont informés de l&apos;identité des différents
@@ -58,14 +58,8 @@ export default function MentionsLegales() {
             <dd>TVA non applicable, art. 293 B du CGI</dd>
             <dt className="font-semibold">E-mail</dt>
             <dd>
-              <a className="text-[#134E4A] underline" href="mailto:contact.niche@gmail.com">
-                contact.niche@gmail.com
-              </a>
-            </dd>
-            <dt className="font-semibold">Téléphone</dt>
-            <dd>
-              <a className="text-[#134E4A] underline" href="tel:+33601020304">
-                +33 6 01 02 03 04
+              <a className="text-[#134E4A] underline" href="mailto:niche.edito@gmail.com">
+                niche.edito@gmail.com
               </a>
             </dd>
           </dl>
@@ -82,8 +76,8 @@ export default function MentionsLegales() {
           <p className={paragraphClass}>
             Le directeur de la publication est secret, entrepreneur individuel
             exploitant Niche&amp;Co. Il est joignable à l&apos;adresse{" "}
-            <a className="text-[#134E4A] underline" href="mailto:contact.niche@gmail.com">
-              contact.niche@gmail.com
+            <a className="text-[#134E4A] underline" href="mailto:niche.edito@gmail.com">
+              niche.edito@gmail.com
             </a>
             .
           </p>
@@ -217,8 +211,8 @@ export default function MentionsLegales() {
           <p className={paragraphClass}>
             Tout auteur, éditeur ou ayant droit qui s&apos;oppose à
             l&apos;utilisation de ses contenus peut écrire à{" "}
-            <a className="text-[#134E4A] underline" href="mailto:contact.niche@gmail.com">
-              contact.niche@gmail.com
+            <a className="text-[#134E4A] underline" href="mailto:niche.edito@gmail.com">
+              niche.edito@gmail.com
             </a>
             . La demande sera traitée dans les meilleurs délais et, si elle est
             fondée, le contenu concerné sera retiré.
@@ -271,8 +265,8 @@ export default function MentionsLegales() {
             Chaque utilisateur dispose d&apos;un droit d&apos;accès, de
             rectification, d&apos;effacement, d&apos;opposition et de
             portabilité de ses données, à exercer à l&apos;adresse{" "}
-            <a className="text-[#134E4A] underline" href="mailto:contact.niche@gmail.com">
-              contact.niche@gmail.com
+            <a className="text-[#134E4A] underline" href="mailto:niche.edito@gmail.com">
+              niche.edito@gmail.com
             </a>
             . Il peut aussi introduire une réclamation auprès de la CNIL (
             <a
@@ -310,8 +304,8 @@ export default function MentionsLegales() {
               l&apos;état
             </a>
             . Il doit au préalable avoir adressé une réclamation écrite à{" "}
-            <a className="text-[#134E4A] underline" href="mailto:contact.niche@gmail.com">
-              contact.niche@gmail.com
+            <a className="text-[#134E4A] underline" href="mailto:niche.edito@gmail.com">
+              niche.edito@gmail.com
             </a>
             .
           </p>
@@ -322,8 +316,8 @@ export default function MentionsLegales() {
           </p>
           <p className={paragraphClass}>
             Pour toute question :{" "}
-            <a className="text-[#134E4A] underline" href="mailto:contact.niche@gmail.com">
-              contact.niche@gmail.com
+            <a className="text-[#134E4A] underline" href="mailto:niche.edito@gmail.com">
+              niche.edito@gmail.com
             </a>
             .
           </p>
