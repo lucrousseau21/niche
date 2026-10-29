@@ -21,7 +21,7 @@ interface SubjectRecap {
   id_recap: number;
   id_sujet: number;
   titre: string;
-  resume: unknown;
+  resume: string | Record<string, unknown> | null;
   contenu: string;
   created_at: string;
 }
@@ -572,17 +572,17 @@ export default function TopicsRecapsPage() {
                         </h4>
 
                         {/* Aperçu du résumé */}
-                        {recap.resume && (
+                        {recap.resume ? (
                           <div
                             className={`text-xs line-clamp-2 ${
                               isDark ? "text-slate-300" : "text-gray-600"
                             }`}
                           >
-                            {typeof recap.resume === "object"
-                              ? Object.values(recap.resume).join(" • ")
+                            {typeof recap.resume === "object" && recap.resume !== null
+                              ? Object.values(recap.resume).map(String).join(" • ")
                               : String(recap.resume)}
                           </div>
-                        )}
+                        ) : null}
                       </div>
 
                       {/* Actions sur le récap */}

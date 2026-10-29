@@ -14,7 +14,7 @@ export default function IngestionPage() {
 
   const [subjects, setSubjects] = useState<SubjectOption[]>([]);
   const [ingestTopic, setIngestTopic] = useState<string>("");
-  const [ingestResult] = useState<unknown>(null);
+  const [ingestResult] = useState<Record<string, unknown> | null>(null);
 
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -120,7 +120,7 @@ export default function IngestionPage() {
           </div>
 
           {/* Résultat d'ingestion */}
-          {ingestResult && (
+          {ingestResult ? (
             <div
               className={`p-4 rounded-xl border space-y-2 ${
                 isDark ? "bg-[#0E1722] border-[#223347]" : "bg-gray-50 border border-gray-200"
@@ -143,7 +143,7 @@ export default function IngestionPage() {
                 {JSON.stringify(ingestResult, null, 2)}
               </pre>
             </div>
-          )}
+          ) : null}
         </div>
 
         {/* Informations sur le pipeline */}
