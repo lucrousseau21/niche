@@ -78,7 +78,7 @@ export default function Signup() {
       // Fallback: If no session but user exists, try explicit sign in
       // This handles cases where auto-login might be skipped or behaves differently
       if (data.user) {
-        const { data: signInData, error: signInError } =
+        const { data: signInData } =
           await supabase.auth.signInWithPassword({
             email,
             password,

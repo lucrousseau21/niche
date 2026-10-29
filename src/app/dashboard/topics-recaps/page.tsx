@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -61,27 +61,27 @@ export default function TopicsRecapsPage() {
   const [creatingRecap, setCreatingRecap] = useState(false);
   const [createRecapError, setCreateRecapError] = useState<string | null>(null);
 
-  const fetchSubjects = async () => {
+  const fetchSubjects = useCallback(async () => {
     setSubjectsLoading(true);
     try {
       const res = await fetch("/api/admin/sujets");
       const data = await res.json();
       if (data.success && data.subjects) {
         setSubjects(data.subjects);
-        if (data.subjects.length > 0 && selectedSubjectId === null) {
-          setSelectedSubjectId(data.subjects[0].id_sujet);
-        }
+        setSelectedSubjectId((prev) =>
+          prev === null && data.subjects.length > 0 ? data.subjects[0].id_sujet : prev
+        );
       }
     } catch (err) {
       console.error("Erreur réseau sujets:", err);
     } finally {
       setSubjectsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchSubjects();
-  }, []);
+  }, [fetchSubjects]);
 
   const handleCreateSubject = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -251,7 +251,7 @@ export default function TopicsRecapsPage() {
               isDark ? "text-slate-400" : "text-gray-500"
             }`}
           >
-            Explorez les sujets configurés et consultez l'historique de toutes les newsletters associées.
+            Explorez les sujets configurés et consultez l&apos;historique de toutes les newsletters associées.
           </p>
         </div>
 

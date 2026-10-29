@@ -29,13 +29,13 @@ export default function PolitiqueConfidentialite() {
             1. Les données que nous collectons
           </h2>
           <p className="mt-3 text-[#2D3748] font-lato leading-relaxed">
-            Pour faire fonctionner notre algorithme de personnalisation ("Deep Filtering"),
+            Pour faire fonctionner notre algorithme de personnalisation (&quot;Deep Filtering&quot;),
             nous collectons les informations suivantes :
           </p>
           <ul className="mt-3 text-[#2D3748] font-lato list-disc ml-6 leading-relaxed">
-            <li><span className="font-semibold">Données d'identité :</span> Adresse email (obligatoire), Nom/Prénom (facultatif).</li>
-            <li><span className="font-semibold">Données de préférences :</span> Thématiques suivies, niveau d'expertise (Débutant/Expert).</li>
-            <li><span className="font-semibold">Données d'usage :</span> Taux d'ouverture, clics, temps de lecture pour améliorer la pertinence du contenu.</li>
+            <li><span className="font-semibold">Données d&apos;identité :</span> Adresse email (obligatoire), Nom/Prénom (facultatif).</li>
+            <li><span className="font-semibold">Données de préférences :</span> Thématiques suivies, niveau d&apos;expertise (Débutant/Expert).</li>
+            <li><span className="font-semibold">Données d&apos;usage :</span> Taux d&apos;ouverture, clics, temps de lecture pour améliorer la pertinence du contenu.</li>
           </ul>
         </section>
 
@@ -50,7 +50,7 @@ export default function PolitiqueConfidentialite() {
           <ul className="mt-3 text-[#2D3748] font-lato list-disc ml-6 leading-relaxed">
             <li>Vous envoyer votre newsletter personnalisée.</li>
             <li>Gérer votre abonnement et vos paiements (via notre prestataire Stripe).</li>
-            <li>Améliorer nos algorithmes grâce à l'analyse anonymisée des tendances de lecture.</li>
+            <li>Améliorer nos algorithmes grâce à l&apos;analyse anonymisée des tendances de lecture.</li>
           </ul>
           <p className="mt-3 text-[#2D3748] font-lato leading-relaxed font-semibold">
             Nous ne revendons jamais vos données personnelles à des tiers.
@@ -108,13 +108,13 @@ export default function PolitiqueConfidentialite() {
             href="/"
             className="btn-primary px-6 py-3 rounded-md text-white bg-[#134E4A] hover:bg-[#0f3a36] text-center"
           >
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </Link>
           <Link
             href="/CGU"
             className="btn-mint px-6 py-3 rounded-md text-white bg-[#10B981] hover:bg-[#0f9b6f] text-center"
           >
-            Conditions Générales d'Utilisation
+            Conditions Générales d&apos;Utilisation
           </Link>
         </div>
       </main>

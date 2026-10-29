@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Sparkles, Rss, Layers, CheckCircle2, AlertTriangle } from "lucide-react";
+import { Sparkles, Rss, Layers } from "lucide-react";
 import { useDashboardTheme } from "../ThemeContext";
 
 interface SubjectOption {
@@ -13,9 +13,8 @@ export default function IngestionPage() {
   const { isDark } = useDashboardTheme();
 
   const [subjects, setSubjects] = useState<SubjectOption[]>([]);
-  const [ingestTopic, setIngestTopic] = useState<string>("");
-  const [ingestLoading, setIngestLoading] = useState(false);
-  const [ingestResult, setIngestResult] = useState<any>(null);
+  const [ingestTopic, setIngestTopic] = useState<string>(" ");
+  const [ingestResult] = useState<any>(null);
 
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -59,7 +58,7 @@ export default function IngestionPage() {
                   isDark ? "text-white" : "text-[#1A3D3B]"
                 }`}
               >
-                Déclencher l'ingestion des flux RSS
+                Déclencher l&apos;ingestion des flux RSS
               </h2>
               <p
                 className={`text-sm mt-1 ${
@@ -116,7 +115,7 @@ export default function IngestionPage() {
               }`}
             >
               <Sparkles className="w-4 h-4" />
-              Lancer l'ingestion maintenant
+              Lancer l&apos;ingestion maintenant
             </button>
           </div>
 
@@ -132,7 +131,7 @@ export default function IngestionPage() {
                   isDark ? "text-slate-300" : "text-gray-700"
                 }`}
               >
-                Résultat de l'exécution :
+                Résultat de l&apos;exécution :
               </span>
               <pre
                 className={`text-xs font-mono overflow-x-auto p-3 rounded-lg border max-h-60 ${
@@ -161,7 +160,7 @@ export default function IngestionPage() {
               </h3>
             </div>
             <p className={`text-xs leading-relaxed ${isDark ? "text-slate-400" : "text-gray-600"}`}>
-              L'ingestion extrait le contenu brut depuis les flux RSS des médias spécialisés, filtre les doublons récents et alimente la table des articles.
+              L&apos;ingestion extrait le contenu brut depuis les flux RSS des médias spécialisés, filtre les doublons récents et alimente la table des articles.
             </p>
           </div>
 

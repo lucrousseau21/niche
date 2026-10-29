@@ -285,11 +285,6 @@ export default function OnboardingPage() {
 
       setAvailableNiches(items);
       setIsLoadingNiches(false);
-
-      // Auto-select first if needed, though simpler to let user choose
-      if (items.length > 0 && selectedNicheIds.length === 0) {
-        // setSelectedNicheIds([items[0].id]);
-      }
     };
 
     fetchNiches();
@@ -326,8 +321,6 @@ export default function OnboardingPage() {
           router.push("/login");
           return;
         }
-
-        const user = session.user;
 
         // 2. Prepare inserts for 'profil' table
         // We need one entry per selected subject
