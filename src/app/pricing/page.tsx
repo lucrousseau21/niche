@@ -50,7 +50,7 @@ const plans = [
       "Rapports sur mesure",
     ],
     buttonText: "Contactez-nous",
-    href: "mailto:contact@niche.fr",
+    href: "mailto:contact.niche@gmail.com",
     popular: false,
   },
 ];

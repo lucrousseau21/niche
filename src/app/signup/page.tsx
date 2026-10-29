@@ -127,10 +127,14 @@ export default function Signup() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Nom */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 ml-1 body-font">
+                <label htmlFor="lastName" className="text-sm font-medium text-gray-700 ml-1 body-font">
                   Nom
                 </label>
                 <input
+                  id="lastName"
+                  name="lastName"
+                  autoComplete="family-name"
+                  required
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   className="w-full px-5 py-3 rounded-2xl bg-gray-50 border border-gray-100 
@@ -141,10 +145,14 @@ export default function Signup() {
 
               {/* Prénom */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 ml-1 body-font">
+                <label htmlFor="firstName" className="text-sm font-medium text-gray-700 ml-1 body-font">
                   Prénom
                 </label>
                 <input
+                  id="firstName"
+                  name="firstName"
+                  autoComplete="given-name"
+                  required
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   className="w-full px-5 py-3 rounded-2xl bg-gray-50 border border-gray-100 
@@ -155,13 +163,17 @@ export default function Signup() {
 
               {/* Email */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 ml-1 body-font">
+                <label htmlFor="signupEmail" className="text-sm font-medium text-gray-700 ml-1 body-font">
                   Adresse email
                 </label>
                 <input
+                  id="signupEmail"
+                  name="email"
+                  autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   type="email"
+                  required
                   className="w-full px-5 py-3 rounded-2xl bg-gray-50 border border-gray-100 
                   focus:outline-none focus:ring-2 focus:ring-[var(--color-mint)] focus:bg-white 
                   transition-all body-font text-gray-800"
@@ -170,14 +182,18 @@ export default function Signup() {
 
               {/* Mot de passe */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 ml-1 body-font">
+                <label htmlFor="signupPassword" className="text-sm font-medium text-gray-700 ml-1 body-font">
                   Mot de passe
                 </label>
                 <div className="relative">
                   <input
+                    id="signupPassword"
+                    name="password"
+                    autoComplete="new-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     type={showPassword ? "text" : "password"}
+                    required
                     className="w-full px-5 py-3 rounded-2xl bg-gray-50 border border-gray-100 
                     focus:outline-none focus:ring-2 focus:ring-[var(--color-mint)] focus:bg-white 
                     transition-all body-font text-gray-800"
@@ -185,6 +201,8 @@ export default function Signup() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                    aria-pressed={showPassword}
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
                     {showPassword ? (
@@ -219,14 +237,18 @@ export default function Signup() {
 
               {/* Confirmation mot de passe */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 ml-1 body-font">
+                <label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700 ml-1 body-font">
                   Confirmer le mot de passe
                 </label>
                 <div className="relative">
                   <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    autoComplete="new-password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     type={showConfirmPassword ? "text" : "password"}
+                    required
                     className="w-full px-5 py-3 rounded-2xl bg-gray-50 border border-gray-100 
                     focus:outline-none focus:ring-2 focus:ring-[var(--color-mint)] focus:bg-white 
                     transition-all body-font text-gray-800"
@@ -234,6 +256,8 @@ export default function Signup() {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    aria-label={showConfirmPassword ? "Masquer la confirmation du mot de passe" : "Afficher la confirmation du mot de passe"}
+                    aria-pressed={showConfirmPassword}
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
                     {showConfirmPassword ? (
@@ -271,6 +295,7 @@ export default function Signup() {
                 <input
                   type="checkbox"
                   id="terms"
+                  required
                   checked={acceptedTerms}
                   onChange={(e) => setAcceptedTerms(e.target.checked)}
                   className="w-4 h-4 accent-[var(--color-mint)]"
@@ -278,12 +303,15 @@ export default function Signup() {
                 <label htmlFor="terms" className="text-gray-700">
                   J&apos;accepte les{" "}
                   <Link
-                    href="/conditions"
+                    href="/CGU"
                     className="text-[var(--color-forest)] underline"
                   >
                     conditions d&apos;utilisation
                   </Link>{" "}
-                  et la politique de confidentialité
+                  et j&apos;ai pris connaissance de la{" "}
+                  <Link href="/conf" className="text-[var(--color-forest)] underline">
+                    politique de confidentialité
+                  </Link>
                 </label>
               </div>
 
@@ -295,6 +323,8 @@ export default function Signup() {
                       ? "bg-red-50 text-red-600"
                       : "bg-green-50 text-green-700"
                   }`}
+                  role={message.type === "error" ? "alert" : "status"}
+                  aria-live="polite"
                 >
                   {message.text}
                 </div>

@@ -23,7 +23,7 @@ export default function MentionsLegales() {
           Mentions légales – Niche.
         </h1>
         <p className="mt-1 text-sm text-[#2D3748] opacity-70">
-          Dernière mise à jour : 17/09/2026
+          Dernière mise à jour : 08/10/2026
         </p>
 
         <section className={`${sectionClass} mt-10`}>
@@ -287,9 +287,9 @@ export default function MentionsLegales() {
           </p>
           <p className={paragraphClass}>
             Le site utilise des cookies nécessaires à son fonctionnement et,
-            sous réserve du consentement de l&apos;utilisateur, des cookies de
-            mesure d&apos;audience déposés via Google Tag Manager. Les choix
-            peuvent être modifiés à tout moment depuis le bandeau cookies.
+            uniquement après consentement, des traceurs Google Analytics de
+            mesure d&apos;audience. Les choix peuvent être modifiés à tout moment
+            avec le lien « Gérer les cookies » en bas de page.
           </p>
         </section>
 
