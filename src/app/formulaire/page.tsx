@@ -289,7 +289,6 @@ export default function OnboardingPage() {
 
       setAvailableNiches(items);
       setIsLoadingNiches(false);
-
     };
 
     fetchNiches();
@@ -351,8 +350,7 @@ export default function OnboardingPage() {
           router.push("/");
         }
       } catch (err: unknown) {
-        const message =
-          err instanceof Error ? err.message : "Erreur inattendue.";
+        const message = err instanceof Error ? err.message : String(err);
         alert(`Erreur inattendue : ${message}`);
       } finally {
         setIsSubmitting(false);

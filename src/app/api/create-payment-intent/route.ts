@@ -14,9 +14,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const stripe = new Stripe(apiKey, {
-      apiVersion: "2023-10-16" as any,
-    });
+    const stripe = new Stripe(apiKey);
 
     const supabase = await createClient();
     
@@ -41,8 +39,9 @@ export async function POST(request: Request) {
 
     // 3. On renvoie le client_secret (le "ticket d'autorisation") dont le formulaire aura besoin
     return NextResponse.json({ clientSecret: paymentIntent.client_secret });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Erreur API Stripe:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const message = error instanceof Error ? error.message : "Erreur serveur";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

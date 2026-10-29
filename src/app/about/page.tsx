@@ -19,7 +19,7 @@ export default function About() {
         <section className="mt-6 grid gap-4">
           <div className="card">
             <h3 className="font-semibold">Notre mission</h3>
-            <p className="small-muted mt-1">Fournir l'essentiel, personnalisé, en quelques minutes par semaine.</p>
+            <p className="small-muted mt-1">Fournir l&apos;essentiel, personnalisé, en quelques minutes par semaine.</p>
           </div>
         </section>
       </main>

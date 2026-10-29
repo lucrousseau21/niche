@@ -77,7 +77,7 @@ function DashboardNavTabs({
     height: number;
   } | null>(null);
   const [isReady, setIsReady] = useState(false);
-  const isInitial = useRef(true);
+  const [hasTransition, setHasTransition] = useState(false);
 
   useEffect(() => {
     const updatePill = () => {
@@ -93,7 +93,7 @@ function DashboardNavTabs({
         if (!isReady) {
           setIsReady(true);
           requestAnimationFrame(() => {
-            isInitial.current = false;
+            setHasTransition(true);
           });
         }
       }
@@ -138,9 +138,9 @@ function DashboardNavTabs({
             transform: `translate3d(${pillStyle.left}px, ${pillStyle.top}px, 0)`,
             width: `${pillStyle.width}px`,
             height: `${pillStyle.height}px`,
-            transition: isInitial.current
-              ? "none"
-              : "transform 420ms cubic-bezier(0.34, 1.35, 0.64, 1), width 340ms cubic-bezier(0.34, 1.15, 0.64, 1), height 300ms ease",
+            transition: hasTransition
+              ? "transform 420ms cubic-bezier(0.34, 1.35, 0.64, 1), width 340ms cubic-bezier(0.34, 1.15, 0.64, 1), height 300ms ease"
+              : "none",
             willChange: "transform, width",
           }}
         />
@@ -199,7 +199,7 @@ function DashboardThemeToggle({
     height: number;
   } | null>(null);
   const [isReady, setIsReady] = useState(false);
-  const isInitial = useRef(true);
+  const [hasTransition, setHasTransition] = useState(false);
 
   useEffect(() => {
     const activeEl = btnRefs.current[themePreference];
@@ -214,7 +214,7 @@ function DashboardThemeToggle({
       if (!isReady) {
         setIsReady(true);
         requestAnimationFrame(() => {
-          isInitial.current = false;
+          setHasTransition(true);
         });
       }
     }
@@ -244,9 +244,9 @@ function DashboardThemeToggle({
             transform: `translate3d(${pillStyle.left}px, ${pillStyle.top}px, 0)`,
             width: `${pillStyle.width}px`,
             height: `${pillStyle.height}px`,
-            transition: isInitial.current
-              ? "none"
-              : "transform 400ms cubic-bezier(0.34, 1.35, 0.64, 1), width 320ms cubic-bezier(0.34, 1.15, 0.64, 1)",
+            transition: hasTransition
+              ? "transform 400ms cubic-bezier(0.34, 1.35, 0.64, 1), width 320ms cubic-bezier(0.34, 1.15, 0.64, 1)"
+              : "none",
             willChange: "transform, width",
           }}
         />

@@ -65,7 +65,7 @@ export async function POST(request: Request) {
     }
 
     // Formater le résumé (support texte brut ou JSON)
-    let resumeFormatted: any = resumeInput;
+    let resumeFormatted: unknown = resumeInput;
     if (typeof resumeInput === "string") {
       const trimmed = resumeInput.trim();
       if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
@@ -137,10 +137,11 @@ export async function POST(request: Request) {
       message: "Newsletter créée avec succès.",
       recap: createdWithId,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Erreur API Admin Create Recap:", error);
+    const message = error instanceof Error ? error.message : "Erreur serveur lors de la création du récap.";
     return NextResponse.json(
-      { error: error.message || "Erreur serveur lors de la création du récap." },
+      { error: message },
       { status: 500 }
     );
   }

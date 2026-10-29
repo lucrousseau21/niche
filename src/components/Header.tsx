@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -12,10 +13,10 @@ export default function Header() {
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeMenuButtonRef = useRef<HTMLButtonElement>(null);
   const menuPanelRef = useRef<HTMLDivElement>(null);
-  const supabase = createClient();
   const router = useRouter();
 
   useEffect(() => {
+    const supabase = createClient();
     const getUser = async () => {
       const {
         data: { user },
@@ -71,6 +72,7 @@ export default function Header() {
   }, [isMenuOpen]);
 
   const handleSignOut = async () => {
+    const supabase = createClient();
     await supabase.auth.signOut();
     router.refresh();
     router.push("/");
@@ -81,10 +83,13 @@ export default function Header() {
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="inline-flex items-center">
-          <img
+          <Image
             src="/images/Logo 1.svg"
             alt="Niche"
+            width={120}
+            height={40}
             className="h-10 w-auto"
+            priority
           />
         </Link>
 
@@ -196,9 +201,11 @@ export default function Header() {
                   Fermer le menu
                 </button>
                 <div className="mb-6 relative">
-                  <img
+                  <Image
                     src="/NICHE_LOGO.png"
                     alt="Niche Logo"
+                    width={140}
+                    height={48}
                     className="h-12 w-auto object-contain brightness-0 invert"
                   />
                 </div>

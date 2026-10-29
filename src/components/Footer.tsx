@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import Image from "next/image";
 import { Mail } from "lucide-react";
 import { CookiePreferencesButton } from "@/components/CookieConsent";
 
@@ -8,9 +9,11 @@ export default function Footer() {
     <footer className="bg-[#FFFAF0] mt-16 px-6 pt-10 pb-6 text-[#2D3748] text-sm">
       {/* --- TOP : Logo + Social --- */}
       <div>
-        <img
+        <Image
           src="/images/Logo 1.svg"
           alt="Niche Logo"
+          width={120}
+          height={40}
           className="h-10 w-auto mb-2 object-contain"
         />
 

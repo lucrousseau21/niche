@@ -34,8 +34,9 @@ export default function PolitiqueConfidentialite() {
           </p>
           <ul className="mt-3 text-[#2D3748] font-lato list-disc ml-6 leading-relaxed">
             <li><span className="font-semibold">Données d&apos;identité :</span> Adresse email (obligatoire), Nom/Prénom (facultatif).</li>
-            <li><span className="font-semibold">Données de préférences :</span> Thématiques suivies et niveau d&apos;expertise.</li>
+            <li><span className="font-semibold">Données de préférences :</span> Thématiques suivies, niveau d&apos;expertise (Débutant/Expert).</li>
             <li><span className="font-semibold">Données de paiement :</span> informations de suivi d’abonnement et de transaction traitées par Stripe ; Niche ne reçoit pas les numéros complets de carte bancaire.</li>
+            <li><span className="font-semibold">Données d&apos;usage :</span> Taux d&apos;ouverture, clics, temps de lecture pour améliorer la pertinence du contenu.</li>
           </ul>
         </section>
 
@@ -51,6 +52,7 @@ export default function PolitiqueConfidentialite() {
             <li>Vous envoyer votre newsletter personnalisée.</li>
             <li>Gérer votre abonnement et vos paiements (via notre prestataire Stripe).</li>
             <li>Assurer la sécurité, le fonctionnement et l’amélioration du service.</li>
+            <li>Améliorer nos algorithmes grâce à l&apos;analyse anonymisée des tendances de lecture.</li>
           </ul>
           <p className="mt-3 text-[#2D3748] font-lato leading-relaxed font-semibold">
             Nous ne revendons jamais vos données personnelles à des tiers.
